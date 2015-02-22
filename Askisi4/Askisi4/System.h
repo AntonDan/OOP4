@@ -1,4 +1,3 @@
-
 #ifndef SYSTEM_INCLUDE_GUARD
 #define SYSTEM_INCLUDE_GUARD
 
@@ -15,11 +14,12 @@ using namespace std;
 
 class Post {
 private:
+	int id;
 	string username;
 	string content;
 
 public:
-	Post(string , string );
+	Post(int, string , string );
 	void SetUser(string );
 	void SetContent(string );
 	string GetUser() const;
@@ -33,6 +33,7 @@ public:
 
 class Thread {
 private:
+	int id;
 	string title;
 	string username;
 	oList<Post> posts;
@@ -42,7 +43,7 @@ private:
 
 public:
 	// CONSTRUCTORS
-	Thread(string, string, string, int = 0);
+	Thread(int, string, string, int = 0);
 
 	// SETTERS 
 	void SetTitle(string );
@@ -52,6 +53,8 @@ public:
 	void SetLocked(bool );
 
 	// GETTERS
+	int GetID() const;
+
 	string GetTitle() const;
 
 	string GetUserName() const;
@@ -65,7 +68,7 @@ public:
 	bool isLocked() const;
 
 	// METHODS
-	void CreatePost(string , string );
+	void CreatePost(int, string , string );
 
 	void DeletePost(int index);
 
@@ -105,7 +108,7 @@ public:
 	// METHODS
 	Forum * CreateSubforum(string );
 
-	Thread * CreateThread(string , string , string , int = 0 );
+	Thread * CreateThread(int, string , string , int = 0 );
 
 	void DeleteSubforum(int index);
 
@@ -125,6 +128,10 @@ private:
 	oList<Forum> forums;
 
 public:
+	// VARS
+	int LastThreadID;
+	int LastPostID;
+
 	// CONSTRUCTOR
 	System();
 

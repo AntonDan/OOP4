@@ -20,12 +20,9 @@ User::User(string name) : Visitor() {
 }
 
 void User::CreateThread(Forum * forum, string title, string content) {
-	forum->CreateThread(title, username, content);
 }
 
-void User::CreatePost(Thread * thread, string content) {
-	thread->CreatePost(username, content);
-}
+void User::CreatePost(Thread * thread, string content) {}
 
 User::~User() {
 	username = "";
@@ -39,18 +36,9 @@ Moderator::Moderator(string name) : User(name) {
 }
 
 void Moderator::DeleteThread(Thread * thread) {
-	if (thread != NULL){
-		delete thread;
-		thread = NULL;
-	}
 }
 
-void Moderator::DeletePost(Post * post) {
-	if (post != NULL) {
-		delete post;
-		post = NULL;
-	}
-}
+void Moderator::DeletePost(Post * post) {}
 
 void Moderator::MoveThread(Thread * thread, Forum * destination) {}
 
@@ -74,26 +62,14 @@ void Moderator::SetLocked(Thread * thread, bool value) {
 
 #pragma region Administrator 
 
-void CreateForum(Forum * destination, string title) {
-	if (destination == NULL) return;
-	destination->CreateSubforum(title);
-}
+void CreateForum(Forum * destination, string title) {}
 
-void CreateForum(System * destination, string title) {
-	if (destination == NULL) return;
-	destination->CreateForum(title);
-}
+void CreateForum(System * destination, string title) {}
 
-void DeleteForum(Forum * forum) {
-	if (forum != NULL) {
-		delete forum;
-		forum = NULL;
-	}
-}
+void DeleteForum(Forum * forum) {}
 
 void MoveForum(Forum * forum, void * destination) {
 	if (forum == NULL || destination == NULL) return;
-
 }
 
 void RenameForum(Forum * forum, string title) {

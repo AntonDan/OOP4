@@ -8,7 +8,8 @@
 #pragma region Post
 
 // CONSTRUCTOR
-Post::Post(string user, string con) {
+Post::Post(int id, string user, string con) {
+	this->id = id;
 	username = user;
 	content = con;
 }
@@ -43,10 +44,10 @@ Post::~Post() {
 #pragma region Thread
 
 // CONSTRUCTORS
-Thread::Thread(string title, string user, string content, int info ) {
+Thread::Thread(int id ,string title, string user, int info ) {
+	this->id = id;
 	this->title = title;
 	username = user;
-	posts.Add(new Post(user, content));
 	sticky = (info % 2 == 1);
 	locked = (info >= 2);
 }
@@ -59,6 +60,8 @@ void Thread::SetSticky(bool value) { sticky = value; }
 void Thread::SetLocked(bool value) { locked = value; }
 
 // GETTERS
+int Thread::GetID() const { return id; }
+
 string Thread::GetTitle() const { return title; }
 
 string Thread::GetUserName() const { return username; }
@@ -72,8 +75,8 @@ bool Thread::isSticky() const { return sticky; }
 bool Thread::isLocked() const { return locked; }
 
 // METHODS
-void Thread::CreatePost(string user, string content) {
-	posts.Add(new Post(user, content));
+void Thread::CreatePost(int id, string user, string content) {
+	posts.Add(new Post(id, user, content));
 }
 
 void Thread::DeletePost(int index) {
@@ -102,12 +105,11 @@ Forum::Forum(string title) {
 void Forum::SetTitle(string new_title) { title = new_title; }
 
 // GETTERS 
-
 string Forum::GetTitle() const { return title; }
 
-Forum * Forum::GetForum(int index) const { return subforums[index]; }
+Forum * Forum::GetForum(int index) const { return subforums[index-1]; }
 
-Thread * Forum::GetThread(int index) const { return threads[index]; }
+Thread * Forum::GetThread(int index) const { return threads[index-1]; }
 
 oList<Forum> * Forum::GetForums() { return &subforums; }
 
@@ -120,8 +122,8 @@ Forum * Forum::CreateSubforum(string title) {
 	return newforum;
 }
 
-Thread * Forum::CreateThread(string title, string username, string content, int info) {
-	Thread * newthread = new Thread(title, username, content, info);
+Thread * Forum::CreateThread(int id, string title, string username, int info) {
+	Thread * newthread = new Thread(id, title, username, info);
 	threads.Add(newthread);
 	return newthread;
 }
@@ -153,12 +155,12 @@ Forum::~Forum() {
 #pragma region System
 
 // CONSTRUCTOR
-System::System() : title("D.I.T.Lists") {}
+System::System() : title("D.I.T.Lists") , LastThreadID(0) , LastPostID(0) {}
 
 // GETTERS 
 string System::GetTitle() const { return title; }
 
-Forum * System::GetForum(int index) const { return forums[index]; }
+Forum * System::GetForum(int index) const { return forums[index-1]; }
 
 oList<Forum> * System::GetForums() { return &forums; }
 
@@ -298,13 +300,16 @@ void ForumNavigator::PrintContent(int index) const {
 /* User+ */
 void ForumNavigator::CreateThread(string title, string unsername, string content) {
 	if (currentForum != NULL) {
-		currentForum->CreateThread(title, unsername, content);
+		main->LastThreadID += 1;
+		currentForum->CreateThread(main->LastThreadID , title, unsername);
+		// Create Post
 	}
 }
 
 void ForumNavigator::CreatePost(string username, string content) {
 	if (currentThread != NULL) {
-		currentThread->CreatePost(username, content);
+		main->LastPostID += 1;
+		currentThread->CreatePost(main->LastPostID , username, content);
 	}
 }
 
