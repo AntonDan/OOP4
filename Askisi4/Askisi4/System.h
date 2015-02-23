@@ -8,6 +8,10 @@
 
 using namespace std;
 
+
+class Thread;
+class Forum;
+
 #pragma region SystemComponents
 
 #pragma region Post
@@ -18,8 +22,10 @@ private:
 	string username;
 	string content;
 
+	Thread * parent;
+
 public:
-	Post(int, string , string );
+	Post(int, string , string , Thread *);
 	void SetUser(string );
 	void SetContent(string );
 	string GetUser() const;
@@ -41,9 +47,11 @@ private:
 	bool sticky;
 	bool locked;
 
+	Forum * parent;
+
 public:
 	// CONSTRUCTORS
-	Thread(int, string, string, int = 0);
+	Thread(int, string, string, Forum * , int = 0);
 
 	// SETTERS 
 	void SetTitle(string );
@@ -86,9 +94,11 @@ private:
 	oList<Forum> subforums;
 	oList<Thread> threads;
 
+	Forum * parent;
+
 public:
 	// CONSTRUCTOR
-	Forum(string );
+	Forum(string , Forum *);
 
 	// SETTERS
 	void SetTitle(string );

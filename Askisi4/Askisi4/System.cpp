@@ -4,14 +4,14 @@
 #include <string>
 #include "System.h"
 
-
 #pragma region Post
 
 // CONSTRUCTOR
-Post::Post(int id, string user, string con) {
+Post::Post(int id, string user, string con, Thread * parent ) {
 	this->id = id;
 	username = user;
 	content = con;
+	this->parent = parent;
 }
 
 // SETTERS
@@ -40,16 +40,16 @@ Post::~Post() {
 
 #pragma endregion
 
-
 #pragma region Thread
 
 // CONSTRUCTORS
-Thread::Thread(int id ,string title, string user, int info ) {
+Thread::Thread(int id ,string title, string user , Forum * parent , int info ) {
 	this->id = id;
 	this->title = title;
 	username = user;
 	sticky = (info % 2 == 1);
 	locked = (info >= 2);
+	this->parent = parent;
 }
 
 // SETTERS 
@@ -76,7 +76,7 @@ bool Thread::isLocked() const { return locked; }
 
 // METHODS
 void Thread::CreatePost(int id, string user, string content) {
-	posts.Add(new Post(id, user, content));
+	posts.Add(new Post(id, user, content, this));
 }
 
 void Thread::DeletePost(int index) {
@@ -93,12 +93,12 @@ Thread::~Thread() {
 
 #pragma endregion
 
-
 #pragma region Forum
 
 // CONSTRUCTOR
-Forum::Forum(string title) {
+Forum::Forum(string title, Forum * parent ) {
 	this->title = title;
+	this->parent = parent;
 }
 
 // SETTERS
@@ -117,13 +117,13 @@ oList<Thread> * Forum::GetThreads() { return &threads; }
 
 // METHODS
 Forum * Forum::CreateSubforum(string title) {
-	Forum * newforum = new Forum(title);
+	Forum * newforum = new Forum(title, this);
 	subforums.Add(newforum);
 	return newforum;
 }
 
 Thread * Forum::CreateThread(int id, string title, string username, int info) {
-	Thread * newthread = new Thread(id, title, username, info);
+	Thread * newthread = new Thread(id, title, username, this, info);
 	threads.Add(newthread);
 	return newthread;
 }
@@ -151,7 +151,6 @@ Forum::~Forum() {
 
 #pragma endregion
 
-
 #pragma region System
 
 // CONSTRUCTOR
@@ -166,7 +165,7 @@ oList<Forum> * System::GetForums() { return &forums; }
 
 // METHODS
 Forum * System::CreateForum(string title) {
-	Forum * newforum = new Forum(title);
+	Forum * newforum = new Forum(title, NULL);
 	forums.Add(newforum);
 	return newforum;
 }
@@ -184,7 +183,6 @@ System::~System() {
 }
 
 #pragma endregion
-
 
 #pragma region Forum Navigator
 // CONSTRUCTORS 
@@ -369,6 +367,5 @@ void ForumNavigator::ChangeUserPassword(string username, string password) {}
 ForumNavigator::~ForumNavigator() {
 	back.Empty();
 }
-
 
 #pragma endregion

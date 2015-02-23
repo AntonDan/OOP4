@@ -32,7 +32,7 @@ public:
 	~User();
 };
 
-class Moderator : User {
+class Moderator : public User {
 public:
 	Moderator(string );
 
@@ -53,6 +53,8 @@ public:
 
 class Administrator : public Moderator {
 public:
+	Administrator(string);
+
 	void CreateForum(Forum * , string );
 
 	void CreateForum(System * , string );

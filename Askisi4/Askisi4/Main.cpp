@@ -18,6 +18,11 @@ void PrintSubForums(Forum * , string );
 
 void PrintThreads(Forum * , string );
 
+void SaveSubforums(ofstream &, ofstream &, ofstream &, Forum *, string);
+
+void SaveThreads(ofstream &, ofstream &, ofstream &, Forum *, string);
+
+
 void PrintSystem(System * root) {
 	oList<Forum> * forums;
 	forums = root->GetForums();
@@ -47,6 +52,48 @@ void PrintThreads(Forum * forum, string curPath ) {
 	threads = forum->GetThreads();
 	for (int i = 0; i < threads->GetLength(); ++i) {
 		cout << "Thread " << curPath + "." << (*threads)[i]->GetID() << " :  " << (*threads)[i]->GetTitle() << endl;
+	}
+}
+
+void SaveSystem(ofstream & forumFile , ofstream & threadFile , ofstream & postFile , System & system) {
+	/* Save Forums */
+	// Start From System's main forums (save)
+	// Proceed to subforums of each main forum (save) 
+	// Continue recursivly until out of forums 
+	/* Save Threads */
+	// While saving each forum save it's threads 
+	/* Save Posts */
+	// While saving each thread , save it's posts
+
+	oList<Forum> * forums;
+	forums = system.GetForums();
+	string path;
+	for (int i = 0; i < forums->GetLength(); ++i) {
+		path = to_string(i + 1);
+		cout << path << " " << (*forums)[i]->GetTitle() << endl;
+		SaveSubforums(forumFile, threadFile, postFile, (*forums)[i], path);
+	}
+
+}
+
+void SaveSubforums(ofstream & forumFile, ofstream & threadFile, ofstream & postFile, Forum * forum, string path) {
+	SaveThreads(forumFile , threadFile , postFile , forum, path);
+
+	oList<Forum> * forums;
+	forums = forum->GetForums();
+	for (int i = 0; i < forums->GetLength(); ++i) {
+		path += "." + to_string(i + 1);
+		cout << path << " " << (*forums)[i]->GetTitle() << endl;
+		SaveSubforums(forumFile, threadFile, postFile, (*forums)[i], path);
+	}
+}
+
+void SaveThreads(ofstream & forumFile, ofstream & threadFile, ofstream & postFile, Forum * forum, string path) {
+	oList<Thread> * threads;
+	threads = forum->GetThreads();
+	for (int i = 0; i < threads->GetLength(); ++i) {
+		Thread * cThread = (*threads)[i];
+		cout << path + "." << cThread->GetID() << " " << (cThread->isSticky() ? "S" : "N") << " " << (cThread->isLocked()? "L":"N") << " " << cThread->GetUserName() << " " << cThread->GetTitle();
 	}
 }
 
@@ -125,16 +172,17 @@ int main(void) {
 	
 	System mainSystem;
 	ForumNavigator nav(&mainSystem);
-	ifstream forumFile("C:/Users/Antonis/Desktop/file.txt");
-	ifstream threadFile("C:/Users/Antonis/Desktop/file2.txt");
+	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+
 	string line , path , name;
 	Forum * tempForum = NULL;
-
 
 #pragma region Forum creator
 	int pamount = -1, camount = 0;
 
-	while (getline(forumFile, line)) {
+	while (getline(iforumfile, line)) {
 		// Parse line
 		Parse(line, "S S", true , ' ', 2, &path, &name);
 		camount = count(path.begin(), path.end(), '.');
@@ -154,7 +202,7 @@ int main(void) {
 #pragma region Thread creator	
 	char sticky, locked;
 	
-	while (getline(threadFile, line)) {
+	while (getline(ithreadfile, line)) {
 		Parse(line, "S C C S", true, ' ', 4, &path, &sticky, &locked, &name);
 		vector<string> vpath = Split(path, '.');
 		// Navigate to thread's parent forum
@@ -171,13 +219,29 @@ int main(void) {
 
 #pragma endregion
 
+	iforumfile.close();
+	ithreadfile.close();
+	ipostfile.close();
+
 	PrintSystem(&mainSystem);
+
+	/*
+	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	SaveSystem(oforumfile, othreadfile, opostfile , mainSystem);
+
+
+
+	oforumfile.close();
+	othreadfile.close();
+	opostfile.close();
+	*/
 
 	cin.clear();
 	cin.sync();
 	cin.get();
 	return 0;
-
 }
 
 #pragma endregion
