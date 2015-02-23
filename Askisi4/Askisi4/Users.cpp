@@ -19,9 +19,13 @@ User::User(string name) : Visitor() {
 	rights = 1;
 }
 
-void User::CreateThread(Forum * forum, string title, string content) {}
+void User::CreateThread(Forum * forum, int TID, int PID, string title, string username, string content) {
+	(forum->CreateThread(TID, title, username))->CreatePost(PID, username, content);
+}
 
-void User::CreatePost(Thread * thread, string content) {}
+void User::CreatePost(Thread * thread, int PID, string username, string content) {
+	thread->CreatePost(PID, username, content);
+}
 
 User::~User() {
 	username = "";
@@ -30,14 +34,17 @@ User::~User() {
 #pragma endregion
 
 #pragma region Moderator
-
 Moderator::Moderator(string name) : User(name) {
 	rights = 2;
 }
 
-void Moderator::DeleteThread(Thread * thread) {}
+void Moderator::DeleteThread(Forum * forum, int index) {
+	forum->DeleteThread(index);
+}
 
-void Moderator::DeletePost(Post * post) {}
+void Moderator::DeletePost(Forum * forum, int index) {
+	
+}
 
 void Moderator::MoveThread(Thread * thread, Forum * destination) {}
 
@@ -61,15 +68,25 @@ void Moderator::SetLocked(Thread * thread, bool value) {
 
 #pragma region Administrator 
 
-Administrator::Administrator(string name) : Moderator(name) {
+Administrator::Administrator(string name) : Moderator(name){ 
 	rights = 3;
 }
 
-void Administrator::CreateForum(Forum * destination, string title) {}
+void Administrator::CreateForum(Forum * destination, string title) {
+	destination->CreateSubforum(title);
+}
 
-void Administrator::CreateForum(System * destination, string title) {}
+void Administrator::CreateForum(System * destination, string title) {
+	destination->CreateForum(title);
+}
 
-void Administrator::DeleteForum(Forum * forum) {}
+void Administrator::DeleteForum(Forum * forum, int index) {
+	forum->DeleteSubforum(index);
+}
+
+void Administrator::DeleteForum(System * system, int index){
+	system->DeleteForum(index);
+}
 
 void Administrator::MoveForum(Forum * forum, void * destination) {
 	if (forum == NULL || destination == NULL) return;
@@ -80,13 +97,17 @@ void Administrator::RenameForum(Forum * forum, string title) {
 	forum->SetTitle(title);
 }
 
-void Administrator::ChangeUserRights(int rights) {}
+void Administrator::ChangeUserRights(int rights) {
+	rights = rights;
+}
 
-void Administrator::DeleteUser(string username) {}
+void Administrator::DeleteUser(string username) {
 
-bool RenameUser(string username) { return false; }
+}
 
-void ChangeUserPassword(string new_password) {}
+bool Administrator::RenameUser(string username) { return false; }
+
+void Administrator::ChangeUserPassword(string new_password) {}
 
 
 #pragma endregion

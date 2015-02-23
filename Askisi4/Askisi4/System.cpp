@@ -32,6 +32,8 @@ string Post::GetContent() const {
 	return content;
 }
 
+Thread * Post::GetParent() const{ return parent; }
+
 // DESTRUCTOR
 Post::~Post() {
 	username = "";
@@ -69,6 +71,8 @@ string Thread::GetUserName() const { return username; }
 oList<Post> * Thread::GetPosts() { return (&posts); }
 
 Post * Thread::GetPost(int index) const { return  posts[index]; }
+
+Forum * Thread::GetParent() const{ return parent; }
 
 bool Thread::isSticky() const { return sticky; }
 
@@ -116,6 +120,10 @@ oList<Forum> * Forum::GetForums() { return &subforums; }
 oList<Thread> * Forum::GetThreads() { return &threads; }
 
 // METHODS
+Forum * Forum::GetParent() const{
+	return parent;
+}
+
 Forum * Forum::CreateSubforum(string title) {
 	Forum * newforum = new Forum(title, this);
 	subforums.Add(newforum);

@@ -25,9 +25,9 @@ protected:
 public:
 	User(string );
 
-	void CreateThread(Forum * , string , string );
+	void CreateThread(Forum *, int, int, string, string, string);
 
-	void CreatePost(Thread * , string );
+	void CreatePost(Thread * , int, string, string );
 
 	~User();
 };
@@ -36,9 +36,9 @@ class Moderator : public User {
 public:
 	Moderator(string );
 
-	void DeleteThread(Thread *);
+	void DeleteThread(Forum *, int);
 
-	void DeletePost(Post * );
+	void DeletePost(Forum *, int );
 
 	void MoveThread(Thread * , Forum * );
 
@@ -59,7 +59,8 @@ public:
 
 	void CreateForum(System * , string );
 
-	void DeleteForum(Forum * );
+	void DeleteForum(Forum *, int );
+	void DeleteForum(System *, int);
 
 	void MoveForum(Forum * , void * );
 

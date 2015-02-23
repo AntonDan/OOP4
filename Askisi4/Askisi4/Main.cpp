@@ -172,9 +172,9 @@ int main(void) {
 	
 	System mainSystem;
 	ForumNavigator nav(&mainSystem);
-	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	ifstream iforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ifstream ipostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 
 	string line , path , name;
 	Forum * tempForum = NULL;

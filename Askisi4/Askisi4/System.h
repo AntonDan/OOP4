@@ -30,6 +30,7 @@ public:
 	void SetContent(string );
 	string GetUser() const;
 	string GetContent() const;
+	Thread * GetParent() const;
 	~Post();
 };
 
@@ -70,6 +71,7 @@ public:
 	oList<Post> * GetPosts();
 
 	Post * GetPost(int ) const;
+	Forum * GetParent() const;
 
 	bool isSticky() const;
 
@@ -108,6 +110,8 @@ public:
 	string GetTitle() const;
 
 	Forum * GetForum(int ) const;
+
+	Forum * GetParent() const;
 
 	Thread * GetThread(int ) const;
 
