@@ -57,53 +57,56 @@ public:
 
 	// SETTERS 
 	void SetTitle(string );
-
 	void SetSticky(bool );
-
 	void SetLocked(bool );
 
 	// GETTERS
 	int GetID() const;
-
 	string GetTitle() const;
-
 	string GetUserName() const;
-
 	oList<Post> * GetPosts();
-
 	Post * GetPost(int) const;
-
 	Post * GetPostByID(int) const;
-
 	Forum * GetParent() const;
-
 	bool isSticky() const;
-
 	bool isLocked() const;
 
 	// METHODS
 	void CreatePost(int, string , string );
-
 	void DeletePost(int index);
-
 	void DeletePost(Post *);
-
 	Post * RemovePost(Post *);
-
 	void AddPost(Post *);
 
 	// DESTRUCTORS
 	~Thread();
 };
+#pragma endregion
 
+#pragma region SF
+class SF {
+protected:
+	oList<Forum> forums;
+
+public:
+	// GETTERS
+	virtual Forum * GetForum(int) const;
+	virtual oList<Forum> * GetForums();
+
+	// METHODS
+	Forum * CreateForum(string);
+	void AddForum(Forum *);
+	void DeleteForum(int);
+	void DeleteForum(Forum *);
+	Forum * RemoveForum(Forum *);
+	
+};
 #pragma endregion
 
 #pragma region Forum
-
-class Forum {
+class Forum : public SF {
 private:
 	string title;
-	oList<Forum> subforums;
 	oList<Thread> threads;
 
 	Forum * parent;
@@ -116,54 +119,29 @@ public:
 	void SetTitle(string );
 
 	// GETTERS 
-
 	string GetTitle() const;
-
-	Forum * GetForum(int ) const;
-
 	Forum * GetParent() const;
-
 	Thread * GetThread(int ) const;
-
 	Thread * GetThreadByID(int) const;
-
-	oList<Forum> * GetForums();
-
 	oList<Thread> * GetThreads();
 
 	// METHODS
-	Forum * CreateSubforum(string );
-
 	Thread * CreateThread(int, string , string , int = 0 );
-
-	void DeleteSubforum(int index);
-
-	void DeleteSubforum(Forum *);
-
-	Forum * RemoveSubforum(Forum *);
-
 	void DeleteThread(int);
-
 	void DeleteThread(Thread *);
-
 	Thread * RemoveThread(Thread *);
-
-	void AddSubforum(Forum *);
-
 	void AddThread(Thread *);
-
+	
 	// DESTRUCTOR
 	~Forum();
 };
-
 #pragma endregion
 
 #pragma region System
-
-class System {
+class System : public SF {
 private:
-	const string title;
-	oList<Forum> forums;
+	const string title; 
+	oList<Forum> forums; // 
 
 public:
 	// VARS
@@ -176,23 +154,9 @@ public:
 	// GETTERS 
 	string GetTitle() const;
 
-	Forum * GetForum(int ) const;
-
-	oList<Forum> * GetForums();
-
-	// METHODS
-	Forum * CreateForum(string );
-
-	void DeleteForum(int );
-
-	Forum * RemoveForum(Forum *);
-
-	void AddForum(Forum *);
-
 	// DESTRUCTOR
 	~System();
 };
-
 #pragma endregion
 
 #pragma region Forum Navigator

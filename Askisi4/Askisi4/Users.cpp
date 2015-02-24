@@ -77,20 +77,12 @@ Administrator::Administrator(string name) : Moderator(name){
 	rights = 3;
 }
 
-void Administrator::CreateForum(Forum * destination, string title) {
-	destination->CreateSubforum(title);
-}
-
-void Administrator::CreateForum(System * destination, string title) {
+void Administrator::CreateForum(SF * destination, string title) {
 	destination->CreateForum(title);
 }
 
-void Administrator::DeleteForum(Forum * forum, int index) {
-	forum->DeleteSubforum(index);
-}
-
-void Administrator::DeleteForum(System * system, int index){
-	system->DeleteForum(index);
+void Administrator::DeleteForum(SF * forum, int index) {
+	forum->DeleteForum(index);
 }
 
 void Administrator::MoveForum(Forum * forum, void * destination) {

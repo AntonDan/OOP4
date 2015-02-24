@@ -120,8 +120,36 @@ Thread::~Thread() {
 
 #pragma endregion
 
-#pragma region Forum
+#pragma region SF
+// GETTERS
+Forum * SF::GetForum(int index) const { return forums[index - 1]; }
 
+oList<Forum> * SF::GetForums() { return &forums; }
+
+// METHODS
+Forum * SF::CreateForum(string title) {
+	Forum * newforum = new Forum(title, NULL);
+	forums.Add(newforum);
+	return newforum;
+}
+
+void SF::DeleteForum(int index) {
+	Forum * temp = forums.Delete(index);
+	if (temp != NULL) {
+		delete temp;
+	}
+}
+
+Forum * SF::RemoveForum(Forum * forum) {
+	return forums.Delete(forum);
+}
+
+void SF::AddForum(Forum * forum) {
+	forums.Add(forum);
+}
+#pragma endregion
+
+#pragma region Forum
 // CONSTRUCTOR
 Forum::Forum(string title, Forum * parent ) {
 	this->title = title;
@@ -134,8 +162,6 @@ void Forum::SetTitle(string new_title) { title = new_title; }
 // GETTERS 
 string Forum::GetTitle() const { return title; }
 
-Forum * Forum::GetForum(int index) const { return subforums[index-1]; }
-
 Thread * Forum::GetThread(int index) const { return threads[index-1]; }
 
 Thread * Forum::GetThreadByID(int ID) const {
@@ -147,8 +173,6 @@ Thread * Forum::GetThreadByID(int ID) const {
 	return NULL;
 }
 
-oList<Forum> * Forum::GetForums() { return &subforums; }
-
 oList<Thread> * Forum::GetThreads() { return &threads; }
 
 // METHODS
@@ -156,34 +180,10 @@ Forum * Forum::GetParent() const {
 	return parent;
 }
 
-Forum * Forum::CreateSubforum(string title) {
-	Forum * newforum = new Forum(title, this);
-	subforums.Add(newforum);
-	return newforum;
-}
-
 Thread * Forum::CreateThread(int id, string title, string username, int info) {
 	Thread * newthread = new Thread(id, title, username, this, info);
 	threads.Add(newthread);
 	return newthread;
-}
-
-void Forum::DeleteSubforum(int index) {
-	Forum * temp = subforums.Delete(index);
-	if (temp != NULL) {
-		delete temp;
-	}
-}
-
-void Forum::DeleteSubforum(Forum * forum) {
-	Forum * temp = subforums.Delete(forum);
-	if (temp != NULL) {
-		delete temp;
-	}
-}
-
-Forum * Forum::RemoveSubforum(Forum * forum) {
-	return subforums.Delete(forum);
 }
 
 void Forum::DeleteThread(int index) {
@@ -204,62 +204,30 @@ Thread * Forum::RemoveThread(Thread * thread) {
 	return threads.Delete(thread);
 }
 
-void Forum::AddSubforum(Forum * forum) {
-	subforums.Add(forum);
-}
-
 void Forum::AddThread(Thread * thread) {
 	threads.Add(thread);
 }
  
 // DESTRUCTOR
 Forum::~Forum() {
-	subforums.~oList();
+	forums.~oList();
 	threads.~threads();
 	title = "";
 }
-
 #pragma endregion
 
 #pragma region System
-
 // CONSTRUCTOR
 System::System() : title("D.I.T.Lists") , LastThreadID(0) , LastPostID(0) {}
 
 // GETTERS 
 string System::GetTitle() const { return title; }
 
-Forum * System::GetForum(int index) const { return forums[index-1]; }
-
-oList<Forum> * System::GetForums() { return &forums; }
-
-// METHODS
-Forum * System::CreateForum(string title) {
-	Forum * newforum = new Forum(title, NULL);
-	forums.Add(newforum);
-	return newforum;
-}
-
-void System::DeleteForum(int index) {
-	Forum * temp = forums.Delete(index);
-	if (temp != NULL) {
-		delete temp;
-	}
-}
-
-Forum * System::RemoveForum(Forum * forum) {
-	return forums.Delete(forum);
-}
-
-void System::AddForum(Forum * forum) {
-	forums.Add(forum);
-}
 
 // DESTRUCTOR
 System::~System() {
 	forums.Destroy();
 }
-
 #pragma endregion
 
 #pragma region Forum Navigator
@@ -415,7 +383,7 @@ void ForumNavigator::SetLocked(int index) {}
 /* Admin_ */
 Forum * ForumNavigator::CreateForum(string title) {
 	if (currentForum != NULL) {
-		return currentForum->CreateSubforum(title);
+		return currentForum->CreateForum(title);
 	} else {
 		return main->CreateForum(title);
 	}
@@ -423,7 +391,7 @@ Forum * ForumNavigator::CreateForum(string title) {
 
 void ForumNavigator::DeleteForum(int index) {
 	if (currentThread == NULL && currentForum != NULL){
-		currentForum->DeleteSubforum(index);
+		currentForum->DeleteForum(index);
 	} else if (currentThread == NULL && currentForum == NULL) {
 		main->DeleteForum(index);
 	}

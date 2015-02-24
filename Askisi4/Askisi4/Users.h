@@ -55,12 +55,9 @@ class Administrator : public Moderator {
 public:
 	Administrator(string);
 
-	void CreateForum(Forum * , string );
+	void CreateForum(SF * , string );
 
-	void CreateForum(System * , string );
-
-	void DeleteForum(Forum *, int );
-	void DeleteForum(System *, int);
+	void DeleteForum(SF *, int );
 
 	void MoveForum(Forum * , void * );
 

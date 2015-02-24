@@ -1,24 +1,18 @@
-﻿Build started 24-Feb-15 3:44:35 PM.
+﻿Build started 24-Feb-15 9:13:40 PM.
      1>Project "C:\Users\Antonis\Desktop\OOP4\Askisi4\Askisi4\Askisi4.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          E:\Program Files (x86)\Microsoft Visual Studio 13.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Askisi4.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp System.cpp Users.cpp
          Users.cpp
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(188): error C2061: syntax error : identifier 'fo'
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(191): error C2143: syntax error : missing ';' before '~'
          System.cpp
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(188): error C2061: syntax error : identifier 'fo'
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(191): error C2143: syntax error : missing ';' before '~'
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.cpp(250): error C2511: 'void System::AddForum(Forum *)' : overloaded member function not found in 'System'
-                 c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(163) : see declaration of 'System'
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.cpp(251): error C2228: left of '.Add' must have class/struct/union
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.cpp(386): error C2039: 'CreateSubforum' : is not a member of 'Forum'
+                 c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(107) : see declaration of 'Forum'
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.cpp(394): error C2039: 'DeleteSubforum' : is not a member of 'Forum'
+                 c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(107) : see declaration of 'Forum'
          Generating Code...
-         Compiling...
+         Skipping... (no relevant changes detected)
          Main.cpp
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(188): error C2061: syntax error : identifier 'fo'
-     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(191): error C2143: syntax error : missing ';' before '~'
-         Generating Code...
      1>Done Building Project "C:\Users\Antonis\Desktop\OOP4\Askisi4\Askisi4\Askisi4.vcxproj" (Build target(s)) -- FAILED.
 
 Build FAILED.
 
-Time Elapsed 00:00:01.11
+Time Elapsed 00:00:00.88
