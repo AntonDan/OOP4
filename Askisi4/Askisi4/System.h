@@ -85,6 +85,8 @@ public:
 
 	void DeletePost(int index);
 
+	Post * DeletePost(Post *);
+
 	// DESTRUCTORS
 	~Thread();
 };

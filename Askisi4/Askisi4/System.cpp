@@ -98,6 +98,10 @@ void Thread::DeletePost(int index) {
 	delete posts.Delete(index);
 }
 
+Post * Thread::DeletePost(Post * post) {
+	return posts.Delete(post);
+}
+
 // DESTRUCTORS
 Thread::~Thread() {
 	title = "";
