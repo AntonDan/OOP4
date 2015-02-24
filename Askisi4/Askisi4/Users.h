@@ -36,9 +36,9 @@ class Moderator : public User {
 public:
 	Moderator(string );
 
-	void DeleteThread(Forum *, int);
+	void DeleteThread(Thread  *);
 
-	void DeletePost(Forum *, int );
+	void DeletePost(Post * post);
 
 	void MoveThread(Thread * , Forum * );
 

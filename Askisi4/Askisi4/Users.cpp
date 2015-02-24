@@ -38,15 +38,19 @@ Moderator::Moderator(string name) : User(name) {
 	rights = 2;
 }
 
-void Moderator::DeleteThread(Forum * forum, int index) {
-	forum->DeleteThread(index);
+void Moderator::DeleteThread(Thread * thread) {
+	Forum * parent = thread->GetParent();
+	parent->DeleteThread(thread);
 }
 
-void Moderator::DeletePost(Forum * forum, int index) {
-	
+void Moderator::DeletePost(Post * post) {
+	Thread * parent = post->GetParent();
+	parent->DeletePost(post);
 }
 
-void Moderator::MoveThread(Thread * thread, Forum * destination) {}
+void Moderator::MoveThread(Thread * thread, Forum * destination) {
+
+}
 
 void Moderator::MovePost(Post * pos, Thread * destinationt) {}
 
