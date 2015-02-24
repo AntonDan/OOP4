@@ -131,7 +131,15 @@ public:
 
 	void DeleteSubforum(int index);
 
-	void DeleteThread(int index);
+	void DeleteSubforum(Forum *);
+
+	Forum * RemoveSubforum(Forum *);
+
+	void DeleteThread(int);
+
+	void DeleteThread(Thread *);
+
+	Thread * RemoveThread(Thread *);
 
 	// DESTRUCTOR
 	~Forum();

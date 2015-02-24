@@ -163,11 +163,33 @@ void Forum::DeleteSubforum(int index) {
 	}
 }
 
+void Forum::DeleteSubforum(Forum * forum) {
+	Forum * temp = subforums.Delete(forum);
+	if (temp != NULL) {
+		delete temp;
+	}
+}
+
+Forum * Forum::RemoveSubforum(Forum * forum) {
+	return subforums.Delete(forum);
+}
+
 void Forum::DeleteThread(int index) {
 	Thread * temp = threads.Delete(index);
 	if (temp != NULL) {
 		delete temp;
 	}
+}
+
+void Forum::DeleteThread(Thread * thread) {
+	Thread * temp = threads.Delete(thread);
+	if (temp != NULL) {
+		delete temp;
+	}
+}
+
+Thread * Forum::RemoveThread(Thread * thread) {
+	return threads.Delete(thread);
 }
 
 // DESTRUCTOR
