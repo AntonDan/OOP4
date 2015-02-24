@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 class Thread;
 class Forum;
 
@@ -28,6 +27,7 @@ public:
 	Post(int, string , string , Thread *);
 	void SetUser(string );
 	void SetContent(string );
+	int GetID() const;
 	string GetUser() const;
 	string GetContent() const;
 	Thread * GetParent() const;
@@ -70,7 +70,10 @@ public:
 
 	oList<Post> * GetPosts();
 
-	Post * GetPost(int ) const;
+	Post * GetPost(int) const;
+
+	Post * GetPostByID(int) const;
+
 	Forum * GetParent() const;
 
 	bool isSticky() const;
@@ -114,6 +117,8 @@ public:
 	Forum * GetParent() const;
 
 	Thread * GetThread(int ) const;
+
+	Thread * GetThreadByID(int) const;
 
 	oList<Forum> * GetForums();
 

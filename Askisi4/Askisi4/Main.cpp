@@ -20,7 +20,9 @@ void PrintThreads(Forum * , string );
 
 void SaveSubforums(ofstream &, ofstream &, ofstream &, Forum *, string);
 
-void SaveThreads(ofstream &, ofstream &, ofstream &, Forum *, string);
+void SaveThreads(ofstream &, ofstream &, Forum *, string);
+
+void SavePosts(ofstream &, Thread *, string);
 
 
 void PrintSystem(System * root) {
@@ -37,9 +39,9 @@ void PrintSubForums(Forum * forum , string curPath ) {
 	oList<Forum> * forums;
 	forums = forum->GetForums();
 	for (int i = 0; i < forums->GetLength(); ++i) {
-		curPath += "." + to_string(i + 1);
-		cout << "Forum " << curPath << " :  " << (*forums)[i]->GetTitle() << endl;
-		PrintSubForums((*forums)[i], curPath );
+		string temppath = curPath + "." + to_string(i + 1);
+		cout << "Forum " << temppath << " :  " << (*forums)[i]->GetTitle() << endl;
+		PrintSubForums((*forums)[i], temppath);
 	}
 
 	PrintThreads(forum, curPath);
@@ -54,6 +56,7 @@ void PrintThreads(Forum * forum, string curPath ) {
 		cout << "Thread " << curPath + "." << (*threads)[i]->GetID() << " :  " << (*threads)[i]->GetTitle() << endl;
 	}
 }
+
 
 void SaveSystem(ofstream & forumFile , ofstream & threadFile , ofstream & postFile , System & system) {
 	/* Save Forums */
@@ -70,30 +73,42 @@ void SaveSystem(ofstream & forumFile , ofstream & threadFile , ofstream & postFi
 	string path;
 	for (int i = 0; i < forums->GetLength(); ++i) {
 		path = to_string(i + 1);
-		cout << path << " " << (*forums)[i]->GetTitle() << endl;
+		forumFile << path << " " << (*forums)[i]->GetTitle() << endl;
 		SaveSubforums(forumFile, threadFile, postFile, (*forums)[i], path);
 	}
 
 }
 
 void SaveSubforums(ofstream & forumFile, ofstream & threadFile, ofstream & postFile, Forum * forum, string path) {
-	SaveThreads(forumFile , threadFile , postFile , forum, path);
+	SaveThreads(threadFile , postFile , forum, path);
 
 	oList<Forum> * forums;
 	forums = forum->GetForums();
 	for (int i = 0; i < forums->GetLength(); ++i) {
-		path += "." + to_string(i + 1);
-		cout << path << " " << (*forums)[i]->GetTitle() << endl;
-		SaveSubforums(forumFile, threadFile, postFile, (*forums)[i], path);
+		Forum * cForum = (*forums)[i];
+		string temppath = path + "." + to_string(i + 1);
+		forumFile << temppath << " " << cForum->GetTitle() << endl;
+		SaveSubforums(forumFile, threadFile, postFile, cForum, temppath);
 	}
 }
 
-void SaveThreads(ofstream & forumFile, ofstream & threadFile, ofstream & postFile, Forum * forum, string path) {
+void SaveThreads(ofstream & threadFile, ofstream & postFile, Forum * forum, string path) {
 	oList<Thread> * threads;
 	threads = forum->GetThreads();
 	for (int i = 0; i < threads->GetLength(); ++i) {
 		Thread * cThread = (*threads)[i];
-		cout << path + "." << cThread->GetID() << " " << (cThread->isSticky() ? "S" : "N") << " " << (cThread->isLocked()? "L":"N") << " " << cThread->GetUserName() << " " << cThread->GetTitle();
+		string tempath = path + "." + to_string(cThread->GetID());
+		threadFile << tempath << " " << ((cThread->isSticky()) ? ("S") : ("N")) << " " << ((cThread->isLocked()) ? ("L") : ("N")) << " " << atoi(cThread->GetUserName().c_str()) << " " << cThread->GetTitle() << endl;
+		SavePosts(postFile, cThread, tempath);
+	}
+}
+
+void SavePosts(ofstream & postFile , Thread * thread , string path ) {
+	oList<Post> * posts;
+	posts = thread->GetPosts();
+	for (int i = 0; i < posts->GetLength(); ++i) {
+		Post * cPost = (*posts)[i];
+		postFile << path + "." << cPost->GetID() << " " << atoi(cPost->GetUser().c_str()) << " " << cPost->GetContent() << endl;
 	}
 }
 
@@ -172,12 +187,13 @@ int main(void) {
 	
 	System mainSystem;
 	ForumNavigator nav(&mainSystem);
-	ifstream iforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ifstream ipostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 
 	string line , path , name;
 	Forum * tempForum = NULL;
+	int ID;
 
 #pragma region Forum creator
 	int pamount = -1, camount = 0;
@@ -198,45 +214,55 @@ int main(void) {
 	}
 #pragma endregion
 
+	unsigned int i = 0;
 
 #pragma region Thread creator	
 	char sticky, locked;
-	
+
 	while (getline(ithreadfile, line)) {
-		Parse(line, "S C C S", true, ' ', 4, &path, &sticky, &locked, &name);
+		Parse(line, "S C C I S", true, ' ', 5, &path, &sticky, &locked, &ID , &name);
 		vector<string> vpath = Split(path, '.');
 		// Navigate to thread's parent forum
 		Forum * tempForum = mainSystem.GetForum(atoi(vpath[0].c_str()));
-		for (unsigned int i = 1; i < vpath.size() - 1; ++i) {
+		for (i = 1; i < vpath.size() - 1; ++i) {
 			tempForum = tempForum->GetForum(atoi(vpath[i].c_str()));
 		}
 		// Create Thread
-		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name , "Username" , ((sticky=='S') + (locked=='L')*2) );
+		// Find username based by ID
+		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name , to_string(ID) , ((sticky=='S') + (locked=='L')*2) );
 	}
 #pragma endregion
 
 #pragma region Post creator
+	string content;
 
+	while (getline(ipostfile, line)) {
+		Parse(line, "S I S", true, ' ', 3, &path, &ID, &content);
+		vector<string> vpath = Split(path, '.');
+		Forum * tempForum = mainSystem.GetForum(atoi(vpath[0].c_str()));
+		for (i = 1; i < vpath.size() - 2; ++i) {
+			tempForum = tempForum->GetForum(atoi(vpath[i].c_str()));
+		}
+		Thread * tempThread = tempForum->GetThreadByID(atoi(vpath[i++].c_str()));
+		tempThread->CreatePost(atoi(vpath[i].c_str()) , to_string(ID), content );
+	}
 #pragma endregion
 
 	iforumfile.close();
 	ithreadfile.close();
 	ipostfile.close();
 
-	PrintSystem(&mainSystem);
 
-	/*
 	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+
 	SaveSystem(oforumfile, othreadfile, opostfile , mainSystem);
-
-
 
 	oforumfile.close();
 	othreadfile.close();
 	opostfile.close();
-	*/
+	
 
 	cin.clear();
 	cin.sync();

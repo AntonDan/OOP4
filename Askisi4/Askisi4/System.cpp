@@ -24,6 +24,8 @@ void Post::SetContent(string con) {
 }
 
 // GETTERS
+int Post::GetID() const { return id; }
+
 string Post::GetUser() const {
 	return username;
 }
@@ -72,6 +74,15 @@ oList<Post> * Thread::GetPosts() { return (&posts); }
 
 Post * Thread::GetPost(int index) const { return  posts[index]; }
 
+Post * Thread::GetPostByID(int ID) const {
+	for (int i = 0; i < posts.GetLength(); ++i) {
+		if (posts[i]->GetID() == ID) {
+			return posts[i];
+		}
+	}
+	return NULL;
+}
+
 Forum * Thread::GetParent() const{ return parent; }
 
 bool Thread::isSticky() const { return sticky; }
@@ -115,12 +126,21 @@ Forum * Forum::GetForum(int index) const { return subforums[index-1]; }
 
 Thread * Forum::GetThread(int index) const { return threads[index-1]; }
 
+Thread * Forum::GetThreadByID(int ID) const {
+	for (int i = 0; i < threads.GetLength(); ++i) {
+		if (threads[i]->GetID() == ID) {
+			return threads[i];
+		}
+	}
+	return NULL;
+}
+
 oList<Forum> * Forum::GetForums() { return &subforums; }
 
 oList<Thread> * Forum::GetThreads() { return &threads; }
 
 // METHODS
-Forum * Forum::GetParent() const{
+Forum * Forum::GetParent() const {
 	return parent;
 }
 
