@@ -90,6 +90,8 @@ public:
 
 	Post * RemovePost(Post *);
 
+	void AddPost(Post *);
+
 	// DESTRUCTORS
 	~Thread();
 };
@@ -146,6 +148,10 @@ public:
 
 	Thread * RemoveThread(Thread *);
 
+	void AddSubforum(Forum *);
+
+	void AddThread(Thread *);
+
 	// DESTRUCTOR
 	~Forum();
 };
@@ -178,6 +184,10 @@ public:
 	Forum * CreateForum(string );
 
 	void DeleteForum(int );
+
+	Forum * RemoveForum(Forum *);
+
+	void AddForum(Forum *);
 
 	// DESTRUCTOR
 	~System();

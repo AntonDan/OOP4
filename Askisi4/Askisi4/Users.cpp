@@ -49,6 +49,7 @@ void Moderator::DeletePost(Post * post) {
 }
 
 void Moderator::MoveThread(Thread * thread, Forum * destination) {
+	Forum * parent = thread->GetParent();
 
 }
 

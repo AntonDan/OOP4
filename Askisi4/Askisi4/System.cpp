@@ -106,6 +106,10 @@ Post * Thread::RemovePost(Post * post) {
 	return posts.Delete(post);
 }
 
+void Thread::AddPost(Post * post) {
+	posts.Add(post);
+}
+
 // DESTRUCTORS
 Thread::~Thread() {
 	title = "";
@@ -200,6 +204,14 @@ Thread * Forum::RemoveThread(Thread * thread) {
 	return threads.Delete(thread);
 }
 
+void Forum::AddSubforum(Forum * forum) {
+	subforums.Add(forum);
+}
+
+void Forum::AddThread(Thread * thread) {
+	threads.Add(thread);
+}
+ 
 // DESTRUCTOR
 Forum::~Forum() {
 	subforums.~oList();
@@ -233,6 +245,14 @@ void System::DeleteForum(int index) {
 	if (temp != NULL) {
 		delete temp;
 	}
+}
+
+Forum * System::RemoveForum(Forum * forum) {
+	return forums.Delete(forum);
+}
+
+void System::AddForum(Forum * forum) {
+	forums.Add(forum);
 }
 
 // DESTRUCTOR

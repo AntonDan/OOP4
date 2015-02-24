@@ -1,20 +1,24 @@
-﻿Build started 24-Feb-15 3:18:57 PM.
+﻿Build started 24-Feb-15 3:44:35 PM.
      1>Project "C:\Users\Antonis\Desktop\OOP4\Askisi4\Askisi4\Askisi4.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          E:\Program Files (x86)\Microsoft Visual Studio 13.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Askisi4.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp System.cpp Users.cpp
-         System.cpp
-         Generating Code...
-         Skipping... (no relevant changes detected)
          Users.cpp
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(188): error C2061: syntax error : identifier 'fo'
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(191): error C2143: syntax error : missing ';' before '~'
+         System.cpp
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(188): error C2061: syntax error : identifier 'fo'
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(191): error C2143: syntax error : missing ';' before '~'
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.cpp(250): error C2511: 'void System::AddForum(Forum *)' : overloaded member function not found in 'System'
+                 c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(163) : see declaration of 'System'
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.cpp(251): error C2228: left of '.Add' must have class/struct/union
+         Generating Code...
+         Compiling...
          Main.cpp
-       Link:
-         E:\Program Files (x86)\Microsoft Visual Studio 13.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Antonis\Desktop\OOP4\Askisi4\Debug\Askisi4.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Antonis\Desktop\OOP4\Askisi4\Debug\Askisi4.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Antonis\Desktop\OOP4\Askisi4\Debug\Askisi4.lib" /MACHINE:X86 Debug\Main.obj
-         Debug\stdafx.obj
-         Debug\System.obj
-         Debug\Users.obj
-         Askisi4.vcxproj -> C:\Users\Antonis\Desktop\OOP4\Askisi4\Debug\Askisi4.exe
-     1>Done Building Project "C:\Users\Antonis\Desktop\OOP4\Askisi4\Askisi4\Askisi4.vcxproj" (Build target(s)).
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(188): error C2061: syntax error : identifier 'fo'
+     1>c:\users\antonis\desktop\oop4\askisi4\askisi4\system.h(191): error C2143: syntax error : missing ';' before '~'
+         Generating Code...
+     1>Done Building Project "C:\Users\Antonis\Desktop\OOP4\Askisi4\Askisi4\Askisi4.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:00.54
+Time Elapsed 00:00:01.11
