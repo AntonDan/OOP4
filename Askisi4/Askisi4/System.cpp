@@ -98,7 +98,11 @@ void Thread::DeletePost(int index) {
 	delete posts.Delete(index);
 }
 
-Post * Thread::DeletePost(Post * post) {
+void Thread::DeletePost(Post * post) {
+	delete posts.Delete(post);
+}
+
+Post * Thread::RemovePost(Post * post) {
 	return posts.Delete(post);
 }
 

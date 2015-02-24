@@ -10,6 +10,7 @@ using namespace std;
 
 class Thread;
 class Forum;
+class System;
 
 #pragma region SystemComponents
 
@@ -85,7 +86,9 @@ public:
 
 	void DeletePost(int index);
 
-	Post * DeletePost(Post *);
+	void DeletePost(Post *);
+
+	Post * RemovePost(Post *);
 
 	// DESTRUCTORS
 	~Thread();
