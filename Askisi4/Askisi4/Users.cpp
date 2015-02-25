@@ -85,7 +85,7 @@ void Administrator::DeleteForum(SF * forum, int index) {
 	forum->DeleteForum(index);
 }
 
-void Administrator::MoveForum(Forum * forum, void * destination) {
+void Administrator::MoveForum(Forum * forum, SF * destination) {
 	if (forum == NULL || destination == NULL) return;
 }
 

@@ -11,6 +11,7 @@ using namespace std;
 class Thread;
 class Forum;
 class System;
+class SF;
 
 #pragma region SystemComponents
 
@@ -38,7 +39,6 @@ public:
 #pragma endregion
 
 #pragma region Thread 
-
 class Thread {
 private:
 	int id;
@@ -109,18 +109,18 @@ private:
 	string title;
 	oList<Thread> threads;
 
-	Forum * parent;
+	SF * parent;
 
 public:
 	// CONSTRUCTOR
-	Forum(string , Forum *);
+	Forum(string , SF *);
 
 	// SETTERS
 	void SetTitle(string );
 
 	// GETTERS 
 	string GetTitle() const;
-	Forum * GetParent() const;
+	SF * GetParent() const;
 	Thread * GetThread(int ) const;
 	Thread * GetThreadByID(int) const;
 	oList<Thread> * GetThreads();

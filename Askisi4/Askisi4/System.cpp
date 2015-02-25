@@ -128,7 +128,7 @@ oList<Forum> * SF::GetForums() { return &forums; }
 
 // METHODS
 Forum * SF::CreateForum(string title) {
-	Forum * newforum = new Forum(title, NULL);
+	Forum * newforum = new Forum(title, this);
 	forums.Add(newforum);
 	return newforum;
 }
@@ -151,7 +151,7 @@ void SF::AddForum(Forum * forum) {
 
 #pragma region Forum
 // CONSTRUCTOR
-Forum::Forum(string title, Forum * parent ) {
+Forum::Forum(string title, SF * parent ) {
 	this->title = title;
 	this->parent = parent;
 }
@@ -176,7 +176,7 @@ Thread * Forum::GetThreadByID(int ID) const {
 oList<Thread> * Forum::GetThreads() { return &threads; }
 
 // METHODS
-Forum * Forum::GetParent() const {
+SF * Forum::GetParent() const {
 	return parent;
 }
 

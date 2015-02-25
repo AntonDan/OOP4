@@ -59,7 +59,7 @@ public:
 
 	void DeleteForum(SF *, int );
 
-	void MoveForum(Forum * , void * );
+	void MoveForum(Forum * , SF * );
 
 	void RenameForum(Forum * , string );
 
