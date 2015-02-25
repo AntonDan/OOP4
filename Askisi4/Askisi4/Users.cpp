@@ -34,6 +34,7 @@ User::~User() {
 #pragma endregion
 
 #pragma region Moderator
+
 Moderator::Moderator(string name) : User(name) {
 	rights = 2;
 }
@@ -105,6 +106,5 @@ void Administrator::DeleteUser(string username) {
 bool Administrator::RenameUser(string username) { return false; }
 
 void Administrator::ChangeUserPassword(string new_password) {}
-
 
 #pragma endregion
