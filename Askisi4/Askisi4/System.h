@@ -32,6 +32,7 @@ public:
 	Post(int, string , string , Thread *);
 	void SetUser(string );
 	void SetContent(string );
+	void Post::SetParent(Thread *);
 	int GetID() const;
 	string GetUser() const;
 	string GetContent() const;

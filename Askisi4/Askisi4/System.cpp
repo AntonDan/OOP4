@@ -23,6 +23,10 @@ void Post::SetContent(string con) {
 	content = con;
 }
 
+void Post::SetParent(Thread * parent){
+	this->parent = parent;
+}
+
 // GETTERS
 int Post::GetID() const { return id; }
 

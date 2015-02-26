@@ -164,7 +164,7 @@ void Parse(const string line, const string mask, const bool string_term , const 
 }
 
 User * Validate() {
-
+	return NULL;
 }
 #pragma endregion
 
