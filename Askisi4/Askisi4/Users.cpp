@@ -88,6 +88,8 @@ void Administrator::DeleteForum(SF * forum, int index) {
 
 void Administrator::MoveForum(Forum * forum, SF * destination) {
 	if (forum == NULL || destination == NULL) return;
+	destination->AddForum(forum->GetParent()->RemoveForum(forum));
+	forum->SetParent(destination);
 }
 
 void Administrator::RenameForum(Forum * forum, string title) {

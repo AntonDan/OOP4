@@ -163,6 +163,9 @@ void Parse(const string line, const string mask, const bool string_term , const 
 	va_end(ap);
 }
 
+User * Validate() {
+
+}
 #pragma endregion
 
 #pragma region main
@@ -170,7 +173,7 @@ int main(void) {
 	/* 1) Create main system 
 	 * 2) Open to read database files
 	 * 3) Declare needed variables
-	*/
+	 */
 	System mainSystem;
 	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
@@ -232,6 +235,19 @@ int main(void) {
 		tempThread->CreatePost(atoi(vpath[i].c_str()) , to_string(ID), content ); // Create post
 	}
 #pragma endregion
+
+	oList<User> users;
+
+	string username, password;
+	cout << "Καλώς ήλθατε στο D.I.T. Lists \n"
+		<< "Παρακαλώ δώστε όνομα χρήση και κωδικό πρόσβασης \n"
+		<< "Όνομα χρήστη: ";
+	cin >> username;
+	cout << "Κωδικός πρόσβασης: ";
+	cin >> password;
+	
+	
+	
 
 	/* close input files */
 	iforumfile.close();
