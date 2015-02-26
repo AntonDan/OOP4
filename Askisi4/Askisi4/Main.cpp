@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ο»Ώ#include "stdafx.h"
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
@@ -163,7 +163,14 @@ void Parse(const string line, const string mask, const bool string_term , const 
 	va_end(ap);
 }
 
-User * Validate() {
+User * Validate(string username, string password, oList<User> const & users) {
+	for (int i = 0; i < users.GetLength(); ++i) {
+		if (users[i]->GetUsername() == username) {
+			if (users[i]->GetPassword() == password) {
+				return users[i];
+			}
+		}
+	}
 	return NULL;
 }
 #pragma endregion
@@ -237,17 +244,23 @@ int main(void) {
 #pragma endregion
 
 	oList<User> users;
+	User * currentUser = NULL; 
 
 	string username, password;
-	cout << "Καλώς ήλθατε στο D.I.T. Lists \n"
-		<< "Παρακαλώ δώστε όνομα χρήση και κωδικό πρόσβασης \n"
-		<< "Όνομα χρήστη: ";
-	cin >> username;
-	cout << "Κωδικός πρόσβασης: ";
-	cin >> password;
-	
-	
-	
+	cout << "ΞΞ±Ξ»ΟΟ‚ Ξ®Ξ»ΞΈΞ±Ο„Ξµ ΟƒΟ„ΞΏ D.I.T. Lists \n"
+		<< "Ξ Ξ±ΟΞ±ΞΊΞ±Ξ»Ο Ξ΄ΟΟƒΟ„Ξµ ΟΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΞ· ΞΊΞ±ΞΉ ΞΊΟ‰Ξ΄ΞΉΞΊΟ Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ·Ο‚ \n";
+	do {
+		cout << "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·: ";
+		cin >> username;
+		cout << "ΞΟ‰Ξ΄ΞΉΞΊΟΟ‚ Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ·Ο‚: ";
+		cin >> password;
+
+		currentUser = Validate(username, password, users);
+
+		if (currentUser == NULL) {
+			cout << "Incorrect username or password. \n Please try again." << endl;
+		}
+	} while (currentUser == NULL);
 
 	/* close input files */
 	iforumfile.close();
