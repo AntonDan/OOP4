@@ -20,21 +20,30 @@ public:
 class User : public Visitor {
 protected:
 	int id;
+	string password;
 	string username;
 
 public:
-	User(string );
+	User(string, string);
 
 	void CreateThread(Forum *, int, int, string, string, string);
 
 	void CreatePost(Thread * , int, string, string );
+
+	void SetUsername(string newname);
+
+	void SetPassword(string code);
+
+	string GetUsername() const;
+
+	string GetPassword() const;
 
 	~User();
 };
 
 class Moderator : public User {
 public:
-	Moderator(string );
+	Moderator(string, string);
 
 	void DeleteThread(Thread  *);
 
@@ -53,7 +62,7 @@ public:
 
 class Administrator : public Moderator {
 public:
-	Administrator(string);
+	Administrator(string, string);
 
 	void CreateForum(SF * , string );
 
@@ -65,11 +74,11 @@ public:
 
 	void ChangeUserRights(int );
 
-	void DeleteUser(string );
+	void DeleteUser(string, oList<User> &);
 
-	bool RenameUser(string );
+	bool RenameUser(string, string, oList<User> &);
 
-	void ChangeUserPassword(string );
+	bool ChangeUserPassword(string, string, oList<User> &);
 
 };
 
