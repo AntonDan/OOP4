@@ -1,10 +1,6 @@
 ﻿#include "stdafx.h"
-#include <iostream>
-#include <cstdlib>
 #include <cstdio>
-#include <string>
 #include <fstream>
-#include <sstream>
 #include <vector>
 #include <cstdarg>
 #include "DS.h"
@@ -245,6 +241,13 @@ int main(void) {
 
 	oList<User> users;
 	User * currentUser = NULL; 
+	Administrator admin("admin" , "pass");
+	Moderator mod("mod", "pass");
+	User user("user", "pass");
+	users.Add(&admin);
+	users.Add(&mod);
+	users.Add(&user);
+
 
 	string username, password;
 	cout << "Καλώς ήλθατε στο D.I.T. Lists \n"
@@ -262,6 +265,20 @@ int main(void) {
 		}
 	} while (currentUser == NULL);
 
+	cout << "Καλώς ήλθατε " << currentUser->GetUsername() << "!" << endl;
+	cout << "Ανήκετε στην κατηγορία "; 
+
+	switch (currentUser->GetRights()) {
+	case 0:
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	}
+	
 	/* close input files */
 	iforumfile.close();
 	ithreadfile.close();
