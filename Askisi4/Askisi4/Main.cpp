@@ -5,28 +5,13 @@
 #include <cstdarg>
 #include "ForumManager.h"
 #include "SystemSave.h"
+#include "Interface.h"
 
 using namespace std;
 
 #pragma region Functions
 
-/* The Trim function removes all whitespaces (char(32)) from the end and start of the given string */
-string Trim(string str) {
-	if (str.length() == 0) return "";
-	string new_str = "";
-	
-	unsigned int i, j;
-	for (i = 0; i < str.length(); ++i)
-		if (str[i] != ' ')	break;
 
-	for (j = str.length() - 1; j > 0; --j)
-		if (str[j] != ' ') 	break;
-
-	for (unsigned int k = i; k <= j; ++k)
-		new_str += str[k];
-	
-	return new_str;
-}
 
 /* The Split function splits a string that is seperated by the given character and returns the substrings within a vector data structure
  * ex. : "This.is a.test" => {"This","is a","test"} 

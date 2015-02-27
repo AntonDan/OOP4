@@ -1,7 +1,40 @@
 ﻿#include "stdafx.h"
+#include <cctype>
 #include "Interface.h"
 
 using namespace std;
+
+/* The Trim function removes all whitespaces (char(32)) from the end and start of the given string */
+string Trim(string & str) {
+	if (str.length() == 0) return "";
+	string new_str = "";
+
+	unsigned int i, j;
+	for (i = 0; i < str.length(); ++i)
+	if (str[i] != ' ')	break;
+
+	for (j = str.length() - 1; j > 0; --j)
+	if (str[j] != ' ') 	break;
+
+	for (unsigned int k = i; k <= j; ++k)
+		new_str += str[k];
+
+	return new_str;
+}
+
+bool isNumber(const string & str) {
+	/* Can be implemented without iterators, but we like to keep a variety on our 
+	 * solutions. (Alternative solution would be using the function overload []) 
+	 * 1) Start (using a pointer) fro, the beginning of the string 
+	 * 2) For every pointer to a character inside the given string , check if it is a digit 
+	 *    if yes, move to the next character. If not, break out of the loop 
+	 * 3) if we have reached the end of the string without breaking out of the loop (and the string isn't empty) return true 
+	 *    else return false
+	 */
+	string::const_iterator ptr = str.begin();
+	while (ptr != str.end() && isdigit(*ptr)) ++ptr;
+	return !str.empty() && ptr == str.end();
+}
 
 void MainMenu(ForumManager & man,  User * user) {
 	cout << "Select: \n "
@@ -14,12 +47,20 @@ void MainMenu(ForumManager & man,  User * user) {
 	   		<< "U, to Manage the User Database. " << endl;
 	}
 
-	char selection;
+	string selection;
 	cin.clear();
 	cin.sync();
 	cin >> selection;
 
-	switch (selection) {
+	selection = Trim(selection);
+
+	if (isNumber(selection)) {
+
+	} else {
+
+	}
+
+	switch (selection[0]) {
 	case 'L':
 		break;
 	case  'X':

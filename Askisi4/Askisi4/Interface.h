@@ -8,13 +8,14 @@
 #include <cstdarg>
 #include "ForumManager.h"
 
+string Trim(string &);
 
-void MainMenu(ForumManager & man, User * user);
+void MainMenu(ForumManager &, User *);
 
-void UserMenu(ForumManager &, User * user);
+void UserMenu(ForumManager &, User *);
 
-void ForumMenu(ForumManager &, User * user);
+void ForumMenu(ForumManager &, User *);
 
-void ThreadMenu(ForumManager &, User * user);
+void ThreadMenu(ForumManager &, User *);
 
 #endif
