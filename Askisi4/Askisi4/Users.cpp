@@ -18,10 +18,11 @@ Visitor::Visitor() {
 #pragma region User 
 
 //CONSTRUCTOR
-User::User(string name, string code) : Visitor() {
+User::User(int id, string name, string code) : Visitor() {
+	this->id = id;
 	username = name;
-	rights = 1;
 	password = code;
+	rights = 1;
 }
 
 //METHODS
@@ -61,6 +62,10 @@ string User::GetPassword() const{
 	return this->password;
 }
 
+int User::GetId() const{
+	return this->id;
+}
+
 //DESTRUCTOR
 User::~User() {
 	username = "";
@@ -73,7 +78,7 @@ User::~User() {
 #pragma region Moderator
 
 //CONSTRUCTOR
-Moderator::Moderator(string name, string code) : User(name, code) {
+Moderator::Moderator(int id,string name, string code) : User(id, name, code) {
 	rights = 2;
 }
 
@@ -125,7 +130,7 @@ void Moderator::SetLocked(Thread * thread, bool value) {
 #pragma region Administrator 
 
 //CONSTRUCTOR
-Administrator::Administrator(string name, string code) : Moderator(name, code){ 
+Administrator::Administrator(int id, string name, string code) : Moderator(id, name, code){ 
 	rights = 3;
 }
 

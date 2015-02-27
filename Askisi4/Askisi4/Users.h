@@ -25,7 +25,7 @@ protected:
 
 public:
 	//CONSTRUCTOR
-	User(string, string);
+	User(int, string, string);
 
 	//METHODS
 	void CreateThread(Forum *, int, int, string, string, string);
@@ -46,6 +46,8 @@ public:
 		
 	int GetRights() const;
 
+	int User::GetId() const;
+
 	//DESTRUCTOR
 	~User();
 };
@@ -53,7 +55,7 @@ public:
 class Moderator : public User {
 public:
 	//CONSTRUCTOR
-	Moderator(string, string);
+	Moderator(int ,string, string);
 
 	//METHODS
 	void DeleteThread(Thread  *);
@@ -75,7 +77,7 @@ public:
 class Administrator : public Moderator {
 public:
 	//CONSTRUCTOR
-	Administrator(string, string);
+	Administrator(int, string, string);
 
 	//METHODS
 	void CreateForum(SF * , string );

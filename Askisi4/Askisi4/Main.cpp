@@ -181,6 +181,7 @@ int main(void) {
 	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	ifstream iuserfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
 
 	string line , path , name;
 	Forum * tempForum = NULL;
@@ -239,23 +240,41 @@ int main(void) {
 	}
 #pragma endregion
 
+	
+#pragma region User Creator
+
 	oList<User> users;
-	User * currentUser = NULL; 
-	Administrator admin("admin" , "pass");
-	Moderator mod("mod", "pass");
-	User user("user", "pass");
-	users.Add(&admin);
-	users.Add(&mod);
-	users.Add(&user);
-
-
 	string username, password;
-	cout << "Καλώς ήλθατε στο D.I.T. Lists \n"
-		<< "Παρακαλώ δώστε όνομα χρήση και κωδικό πρόσβασης \n";
+	int id, rights;
+
+	while (getline(iuserfile, line)){
+		Parse(line, "I S S I", false, ' ',  4, &id, &username, &password, &rights);
+		cout << "Id: " << id << " username: " << username << " password " << password << " rights: " << rights << endl;
+		switch (rights)
+		{
+		case 1:
+			users.Add(new User(id, username, password));
+			break;
+		case 2:
+			users.Add(new Moderator(id, username, password));
+			break;
+		case 3:
+			users.Add(new Administrator(id, username, password));
+			break;
+		}
+
+	}
+
+# pragma endregion
+
+	User * currentUser = NULL;
+	
+	cout << "Welcome to D.I.T Lists! \n"
+		<< "Please type in username and password \n";
 	do {
-		cout << "Όνομα χρήστη: ";
+		cout << "Username: ";
 		cin >> username;
-		cout << "Κωδικός πρόσβασης: ";
+		cout << "Password: ";
 		cin >> password;
 
 		currentUser = Validate(username, password, users);
@@ -265,8 +284,8 @@ int main(void) {
 		}
 	} while (currentUser == NULL);
 
-	cout << "Καλώς ήλθατε " << currentUser->GetUsername() << "!" << endl;
-	cout << "Ανήκετε στην κατηγορία "; 
+	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
+	cout << "You belong in the category "; 
 
 	switch (currentUser->GetRights()) {
 	case 0:
