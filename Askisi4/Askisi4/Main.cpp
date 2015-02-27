@@ -15,6 +15,7 @@ void SaveThreads(ofstream &, ofstream &, Forum *, string);
 
 void SavePosts(ofstream &, Thread *, string);
 
+
 /* The Save functions take care of (guess what?) saving the given system's condition in the given files (forum file , thread file , post file) */
 void SaveSystem(ofstream & forumFile , ofstream & threadFile , ofstream & postFile , System & system) {
 	/* Get the main forums and save the state of each one of them and their subforums
@@ -62,6 +63,12 @@ void SavePosts(ofstream & postFile , Thread * thread , string path ) {
 	for (int i = 0; i < posts->GetLength(); ++i) {
 		Post * cPost = (*posts)[i];
 		postFile << path + "." << cPost->GetID() << " " << atoi(cPost->GetUser().c_str()) << " " << cPost->GetContent() << endl;
+	}
+}
+
+void SaveUsers(ofstream & userfile, oList<User> & users){
+	for (int i = 0; i < users.GetLength(); ++i){
+		userfile << users[i]->GetId() << " " << users[i]->GetUsername() << " " << users[i]->GetPassword() << " " << users[i]->GetRights() << endl;
 	}
 }
 
@@ -177,10 +184,10 @@ int main(void) {
 	 * 3) Declare needed variables
 	 */
 	System mainSystem;
-	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
-	ifstream iuserfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
+	ifstream iforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ifstream ipostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	ifstream iuserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
 
 	string line , path , name;
 	Forum * tempForum = NULL;
@@ -289,18 +296,22 @@ int main(void) {
 	iforumfile.close();
 	ithreadfile.close();
 	ipostfile.close();
+	iuserfile.close();
 
 	/* Open files for writting */
-	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	ofstream oforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ofstream othreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ofstream opostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
+	ofstream ouserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
 
 	SaveSystem(oforumfile, othreadfile, opostfile, mainSystem); // Save system in files 
+	SaveUsers(ouserfile, users);
 
 	/* close outpute files */
 	oforumfile.close();
 	othreadfile.close();
 	opostfile.close();
+	ouserfile.close();
 	
 	cin.clear();
 	cin.sync();
