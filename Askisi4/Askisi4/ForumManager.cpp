@@ -197,7 +197,11 @@ void ForumManager::DeleteUser(string username) {
 }
 
 bool ForumManager::RenameUser(string username, string newname) {
-	/* Searching the user list until the given username is found, then rename it */
+	/* Searching the user list until the given username is found, then rename it or return false if new username already exists */
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == newname) return false;
+	}
+
 	for (int i = 0; i < users->GetLength(); ++i){
 		if ((*users)[i]->GetUsername() == username){
 			(*users)[i]->SetUsername(newname);
