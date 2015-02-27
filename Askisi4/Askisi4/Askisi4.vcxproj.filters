@@ -36,6 +36,12 @@
     <ClInclude Include="ForumManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Interface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemSave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ForumManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemSave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

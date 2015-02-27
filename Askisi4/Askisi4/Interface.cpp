@@ -1,9 +1,5 @@
 ﻿#include "stdafx.h"
-#include <cstdio>
-#include <fstream>
-#include <vector>
-#include <cstdarg>
-#include "ForumManager.h"
+#include "Interface.h"
 
 using namespace std;
 
