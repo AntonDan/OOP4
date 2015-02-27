@@ -193,7 +193,6 @@ int main(void) {
 
 	while (getline(iuserfile, line)){
 		Parse(line, "I S S I", false, ' ',  4, &id, &username, &password, &rights);
-		cout << "Id: " << id << " username: " << username << " password " << password << " rights: " << rights << endl;
 		users.Add(new User(id, username, password, rights));
 	}
 
@@ -201,7 +200,7 @@ int main(void) {
 
 	User * currentUser = NULL;
 	
-	cout << "Welcome to D.I.T Lists! \n"
+	cout << "\t===========================\n\t||Welcome to D.I.T Lists!|| \n\t===========================\n\n"
 		<< "Please type in username and password \n";
 	do {
 		cout << "Username: ";

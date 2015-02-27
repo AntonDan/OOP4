@@ -11,10 +11,10 @@
 
 void MainMenu(ForumManager & man, User * user);
 
-void UserMenu(User * user);
+void UserMenu(ForumManager &, User * user);
 
-void ForumMenu(User * user);
+void ForumMenu(ForumManager &, User * user);
 
-void ThreadMenu(User * user);
+void ThreadMenu(ForumManager &, User * user);
 
 #endif
