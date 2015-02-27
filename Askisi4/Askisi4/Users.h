@@ -25,12 +25,9 @@ protected:
 
 public:
 	//CONSTRUCTOR
-	User(int, string, string);
+	User(int, string, string, int);
 
 	//METHODS
-	void CreateThread(Forum *, int, int, string, string, string);
-
-	void CreatePost(Thread * , int, string, string );
 
 	//SETTERS
 	void SetUsername(string newname);
@@ -50,52 +47,6 @@ public:
 
 	//DESTRUCTOR
 	~User();
-};
-
-class Moderator : public User {
-public:
-	//CONSTRUCTOR
-	Moderator(int ,string, string);
-
-	//METHODS
-	void DeleteThread(Thread  *);
-
-	void DeletePost(Post * post);
-
-	void MoveThread(Thread * , Forum *);
-
-	void MovePost(Post * , Thread * );
-
-	void RenameThread(Thread *, string);
-
-	//SETTERS
-	void SetSticky(Thread * , bool );
-
-	void SetLocked(Thread *, bool);
-};
-
-class Administrator : public Moderator {
-public:
-	//CONSTRUCTOR
-	Administrator(int, string, string);
-
-	//METHODS
-	void CreateForum(SF * , string );
-
-	void DeleteForum(SF *, int );
-
-	void MoveForum(Forum * , SF * );
-
-	void RenameForum(Forum * , string );
-
-	void ChangeUserRights(int );
-
-	void DeleteUser(string, oList<User> &);
-
-	bool RenameUser(string, string, oList<User> &);
-
-	bool ChangeUserPassword(string, string, oList<User> &);
-
 };
 
 #pragma endregion

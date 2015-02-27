@@ -3,23 +3,25 @@
 
 using namespace std;
 
-#pragma region Forum Navigator
+#pragma region ForumManager
 // CONSTRUCTORS 
-ForumNavigator::ForumNavigator(System * system) {
+ForumManager::ForumManager(System * system, oList<User> * users) {
 	main = system;
+	this->users = users;
 	currentForum = NULL;
 	currentThread = NULL;
 }
 
 // GETTERS
-System * ForumNavigator::GetMain() const { return main; }
+System * ForumManager::GetMain() const { return main; }
 
-Forum * ForumNavigator::GetCurrentForum() const { return currentForum; }
+Forum * ForumManager::GetCurrentForum() const { return currentForum; }
 
-Thread * ForumNavigator::GetCurrentThread() const { return currentThread; }
+Thread * ForumManager::GetCurrentThread() const { return currentThread; }
 
 // METHODS
-void ForumNavigator::VisitForum(int index) {
+// VISITOR
+void ForumManager::VisitForum(int index) {
 	/* If we are not inside a forum visit a System subforum
 	* else visit a forum subforum */
 	if (currentForum == NULL) {
@@ -29,16 +31,16 @@ void ForumNavigator::VisitForum(int index) {
 	}
 }
 
-void ForumNavigator::VisitForum(Forum * forum) { currentForum = forum; }
+void ForumManager::VisitForum(Forum * forum) { currentForum = forum; }
 
-void ForumNavigator::VisitThread(int index) {
+void ForumManager::VisitThread(int index) {
 	/* If we are inside a forum (threads do not exist directly under system) visit the thread */
 	if (currentForum != NULL) {
 		currentThread = currentForum->GetThread(index);
 	}
 }
 
-void ForumNavigator::Back() {
+void ForumManager::Back() {
 	/* If by going back you return to the main system both set both cForum and cThread to NULL
 	* else just set cThread = NULL (since a thread doesnt exist inside a thread) and move up a forum */
 	if (currentForum == NULL) return; // GUARD
@@ -51,7 +53,7 @@ void ForumNavigator::Back() {
 	}
 }
 
-void ForumNavigator::PrintCurrent() const {
+void ForumManager::PrintCurrent() const {
 	/* Print suitable data depending on were we are (inside a thread , a forum or a the main System) */
 	if (currentThread != NULL) {
 		cout << "Thread: " << currentThread->GetTitle() << "  by: " << currentThread->GetUserName() << endl;
@@ -62,7 +64,7 @@ void ForumNavigator::PrintCurrent() const {
 	}
 }
 
-void ForumNavigator::PrintContents() {
+void ForumManager::PrintContents() {
 	/* Depending on case print either the posts inside the current Thread
 	*  or the subforums and threads inside the forum
 	*  or the main forums under the System */
@@ -89,7 +91,7 @@ void ForumNavigator::PrintContents() {
 	}
 }
 
-void ForumNavigator::PrintContent(int index) const {
+void ForumManager::PrintContent(int index) const {
 	/* If we are under a thread print the content of the post
 	* If we are under a post print the data of the thread and subforum
 	* If we are under the system print the data of the main forum
@@ -104,53 +106,67 @@ void ForumNavigator::PrintContent(int index) const {
 	}
 }
 
-void ForumNavigator::DeleteThread(Thread * thread) {
+// USER
+void ForumManager::CreateThread(Forum * forum, int TID, int PID, string title, string username, string content) {
+	/* Create a thread and a post inside it */
+	(forum->CreateThread(TID, title, username))->CreatePost(PID, username, content);
+}
+
+void ForumManager::CreatePost(Thread * thread, int PID, string username, string content) {
+	/* Create a post with given data */
+	thread->CreatePost(PID, username, content);
+}
+
+
+// MODERATOR
+void ForumManager::DeleteThread(Thread * thread) {
 	/* Accesing thread's parent and deleting the given thread that it contains */
 	(thread->GetParent())->DeleteThread(thread);
 }
 
-void ForumNavigator::DeletePost(Post * post) {
+void ForumManager::DeletePost(Post * post) {
 	/* Accesing post's parent and deleting the given post that it contains */
 	(post->GetParent())->DeletePost(post);
 }
 
-void ForumNavigator::MoveThread(Thread * thread, Forum * destination) {
+void ForumManager::MoveThread(Thread * thread, Forum * destination) {
 	/* Accesing thread's parent and removing the given thread that it contains, after that we add it to the destination.
 	Finally, we assign the new parent to the moved thread */
 	destination->AddThread((thread->GetParent())->RemoveThread(thread));
 	thread->SetParent(destination);
 }
 
-void ForumNavigator::MovePost(Post * pos, Thread * destination) {
+void ForumManager::MovePost(Post * pos, Thread * destination) {
 	/* Accesing post's parent and removing the given post that it contains, after that we add it to the destination.
 	Finally, we assign the new parent to the moved post */
 	destination->AddPost((pos->GetParent())->RemovePost(pos));
 	pos->SetParent(destination);
 }
 
-void ForumNavigator::RenameThread(Thread * thread, string title) {
+void ForumManager::RenameThread(Thread * thread, string title) {
 	thread->SetTitle(title);
 }
 
-void ForumNavigator::SetSticky(Thread * thread, bool value) {
+void ForumManager::ChangeSticky(Thread * thread) {
 	if (thread == NULL) return;
-	thread->SetSticky(value);
+	thread->SetSticky(!thread->isSticky());
 }
 
-void ForumNavigator::SetLocked(Thread * thread, bool value) {
+void ForumManager::ChangeLocked(Thread * thread) {
 	if (thread == NULL) return;
-	thread->SetLocked(value);
+	thread->SetLocked(!thread->isLocked());
 }
 
-void ForumNavigator::CreateForum(SF * destination, string title) {
+// ADMINISTRATOR
+void ForumManager::CreateForum(SF * destination, string title) {
 	destination->CreateForum(title);
 }
 
-void ForumNavigator::DeleteForum(SF * forum, int index) {
+void ForumManager::DeleteForum(SF * forum, int index) {
 	forum->DeleteForum(index);
 }
 
-void ForumNavigator::MoveForum(Forum * forum, SF * destination) {
+void ForumManager::MoveForum(Forum * forum, SF * destination) {
 	/* Accesing forum's parent and removing the given forum that it contains, after that we add it to the destination.
 	Finally, we assign the new parent to the moved forum */ 
 	if (forum == NULL || destination == NULL) return;
@@ -158,40 +174,44 @@ void ForumNavigator::MoveForum(Forum * forum, SF * destination) {
 	forum->SetParent(destination);
 }
 
-void ForumNavigator::RenameForum(Forum * forum, string title) {
+void ForumManager::RenameForum(Forum * forum, string title) {
 	if (forum == NULL) return;
 	forum->SetTitle(title);
 }
 
-void ForumNavigator::ChangeUserRights(User * user , int rights) {
-	user->SetRights(rights);
-}
-
-void ForumNavigator::DeleteUser(string username, oList<User> & users) {
-	/* Searching the user list until the given username is found, then deleting it */
-	for (int i = 0; i < users.GetLength(); ++i){
-		if (users[i]->GetUsername() == username){
-			delete users.Delete(i);
+void ForumManager::ChangeUserRights(string username , int rights) {
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == username){
+			(*users)[i]->SetRights(rights);
 		}
 	}
 }
 
-bool ForumNavigator::RenameUser(string username, string newname, oList<User> & users) {
+void ForumManager::DeleteUser(string username) {
+	/* Searching the user list until the given username is found, then deleting it */
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == username){
+			delete users->Delete(i);
+		}
+	}
+}
+
+bool ForumManager::RenameUser(string username, string newname) {
 	/* Searching the user list until the given username is found, then rename it */
-	for (int i = 0; i < users.GetLength(); ++i){
-		if (users[i]->GetUsername() == username){
-			users[i]->SetUsername(newname);
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == username){
+			(*users)[i]->SetUsername(newname);
 			return true;
 		}
 	}
 	return false;
 }
 
-bool ForumNavigator::ChangeUserPassword(string username, string code, oList<User> & users) {				// username: name of the user's account		code: new passord to be assigned
+bool ForumManager::ChangeUserPassword(string username, string code) {				// username: name of the user's account		code: new passord to be assigned
 	/* Searching the user list until the given username is found, then assign the new password it */
-	for (int i = 0; i < users.GetLength(); ++i){
-		if (users[i]->GetUsername() == username){
-			users[i]->SetUsername(code);
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == username){
+			(*users)[i]->SetUsername(code);
 			return true;
 		}
 	}

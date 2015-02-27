@@ -5,15 +5,16 @@
 #include "System.h"
 #include "Users.h"
 
-class ForumNavigator {
+class ForumManager {
 private:
 	System * main;
 	Forum  * currentForum;
 	Thread * currentThread;
+	oList<User> * users;
 
 public:
 	// CONSTRUCTORS 
-	ForumNavigator(System *);
+	ForumManager(System *, oList<User> *);
 
 	// GETTERS
 	System * GetMain() const;
@@ -35,6 +36,10 @@ public:
 
 	void PrintContent(int) const;
 
+	void CreateThread(Forum *, int, int, string, string, string);
+
+	void CreatePost(Thread *, int, string, string);
+
 	void DeleteThread(Thread *);
 
 	void DeletePost(Post *);
@@ -45,9 +50,9 @@ public:
 
 	void RenameThread(Thread *, string);
 
-	void SetSticky(Thread *, bool);
+	void ChangeSticky(Thread *);
 
-	void SetLocked(Thread *, bool);
+	void ChangeLocked(Thread *);
 
 	void CreateForum(SF *, string);
 
@@ -57,13 +62,13 @@ public:
 
 	void RenameForum(Forum *, string);
 
-	void ChangeUserRights(User * , int);
+	void ChangeUserRights(string, int);
 
-	void DeleteUser(string, oList<User> &);
+	void DeleteUser(string);
 
-	bool RenameUser(string, string, oList<User> &);
+	bool RenameUser(string, string);
 
-	bool ChangeUserPassword(string, string, oList<User> &);
+	bool ChangeUserPassword(string, string);
 };
 
 #pragma endregion

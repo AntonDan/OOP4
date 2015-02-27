@@ -14,26 +14,14 @@ Visitor::Visitor() {
 #pragma endregion
 
 
-
 #pragma region User 
 
 //CONSTRUCTOR
-User::User(int id, string name, string code) : Visitor() {
+User::User(int id, string name, string code, int rights) : Visitor() {
 	this->id = id;
 	username = name;
 	password = code;
-	rights = 1;
-}
-
-//METHODS
-void User::CreateThread(Forum * forum, int TID, int PID, string title, string username, string content) {
-	/* Create a thread and a post inside it */
-	(forum->CreateThread(TID, title, username))->CreatePost(PID, username, content);
-}
-
-void User::CreatePost(Thread * thread, int PID, string username, string content) {
-	/* Create a post with given data */
-	thread->CreatePost(PID, username, content);
+	rights = rights;
 }
 
 //SETTERS

@@ -3,8 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <cstdarg>
-#include "DS.h"
-#include "Users.h"
+#include "ForumManager.h"
 
 using namespace std;
 
@@ -250,19 +249,7 @@ int main(void) {
 	while (getline(iuserfile, line)){
 		Parse(line, "I S S I", false, ' ',  4, &id, &username, &password, &rights);
 		cout << "Id: " << id << " username: " << username << " password " << password << " rights: " << rights << endl;
-		switch (rights)
-		{
-		case 1:
-			users.Add(new User(id, username, password));
-			break;
-		case 2:
-			users.Add(new Moderator(id, username, password));
-			break;
-		case 3:
-			users.Add(new Administrator(id, username, password));
-			break;
-		}
-
+		users.Add(new User(id, username, password, rights));
 	}
 
 # pragma endregion
