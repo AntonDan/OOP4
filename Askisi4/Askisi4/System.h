@@ -19,7 +19,6 @@ class SF;
 #pragma region SystemComponents
 
 #pragma region Post
-
 class Post {
 private:
 	int id;
@@ -39,7 +38,6 @@ public:
 	Thread * GetParent() const;
 	~Post();
 };
-
 #pragma endregion
 
 #pragma region Thread 
@@ -163,43 +161,6 @@ public:
 	// DESTRUCTOR
 	~System();
 };
-#pragma endregion
-
-#pragma region Forum Navigator
-
-class ForumNavigator {
-private:
-	System * main;
-	Forum  * currentForum;
-	Thread * currentThread;
-
-public:
-	// CONSTRUCTORS 
-	ForumNavigator(System *);
-
-	// GETTERS
-	System * GetMain() const;
-
-	Forum * GetCurrentForum() const;
-
-	Thread * GetCurrentThread() const;
-
-	// METHODS
-	void VisitForum(int);
-
-	void VisitForum(Forum * );
-
-	void VisitThread(int );
-
-	void Back();
-
-	void PrintCurrent() const;
-
-	void PrintContents();
-
-	void PrintContent(int ) const;
-};
-
 #pragma endregion
 
 #pragma endregion

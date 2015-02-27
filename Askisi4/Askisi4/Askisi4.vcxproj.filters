@@ -33,6 +33,9 @@
     <ClInclude Include="DS.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ForumManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ForumManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
