@@ -64,7 +64,7 @@ void ForumManager::PrintCurrent() const {
 	}
 }
 
-void ForumManager::PrintContents() {
+void ForumManager::PrintContents(int type) {
 	/* Depending on case print either the posts inside the current Thread
 	*  or the subforums and threads inside the forum
 	*  or the main forums under the System */
@@ -72,21 +72,25 @@ void ForumManager::PrintContents() {
 	if (currentThread != NULL) {
 		oList<Post> * posts = currentThread->GetPosts();
 		for (int i = 0; i < posts->GetLength(); ++i) {
-			cout << "Post: " << i + 1 << ": " << "User: " << (*posts)[i]->GetUser() << "  content: " << (*posts)[i]->GetContent() << endl;
+			cout << "User: " << (*posts)[i]->GetUser() << "  content: " << (*posts)[i]->GetContent() << "  [ID: " << (*posts)[i]->GetID() << "] " << endl;
 		}
 	} else if (currentForum != NULL) {
-		forums = currentForum->GetForums();
-		for (int i = 0; i < forums->GetLength(); ++i) {
-			cout << "Forum " << i + 1 << ": " << (*forums)[i]->GetTitle() << endl;
-		}
-		oList<Thread> * threads = currentForum->GetThreads();
-		for (int i = 0; i < threads->GetLength(); ++i) {
-			cout << "Thread " << i + 1 << ": " << (*threads)[i]->GetTitle() << "  by: " << (*threads)[i]->GetUserName() << endl;
+		if (type % 2 == 0) {
+			forums = currentForum->GetForums();
+			for (int i = 0; i < forums->GetLength(); ++i) {
+				cout << (*forums)[i]->GetTitle() << "[ID: " << i + 1 << "] " << endl;
+			}
+		} 
+		if (type > 0) {
+			oList<Thread> * threads = currentForum->GetThreads();
+			for (int i = 0; i < threads->GetLength(); ++i) {
+				cout << "Thread " << i + 1 << ": " << (*threads)[i]->GetTitle() << "  by: " << "  [ID: " << (*threads)[i]->GetID() << "] " << endl;
+			}
 		}
 	} else {
 		forums = main->GetForums();
 		for (int i = 0; i < forums->GetLength(); ++i) {
-			cout << "Forum " << i + 1 << ": " << (*forums)[i]->GetTitle() << endl;
+			cout << (*forums)[i]->GetTitle() << "  [ID: " << i + 1 << "] " << endl;
 		}
 	}
 }
@@ -220,5 +224,20 @@ bool ForumManager::ChangeUserPassword(string username, string code) {				// user
 		}
 	}
 	return false;
+}
+
+void ForumManager::Save(ofstream & forumfile, ofstream & threadfile, ofstream & postfile, ofstream & userfile) {
+	SaveSystem(forumfile, threadfile, postfile);
+	SaveUsers(userfile);
+}
+
+void ForumManager::SaveSystem(ofstream & forumfile, ofstream & threadfile, ofstream &postfile) {
+	main->Save(forumfile, threadfile, postfile);
+}
+
+void ForumManager::SaveUsers(ofstream & userfile) {
+	for (int i = 0; i < users->GetLength(); ++i){
+		userfile << (*users)[i]->GetId() << " " << (*users)[i]->GetUsername() << " " << (*users)[i]->GetPassword() << " " << (*users)[i]->GetRights() << endl;
+	}
 }
 #pragma endregion

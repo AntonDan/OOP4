@@ -1,18 +1,13 @@
 ﻿#include "stdafx.h"
 #include <cstdio>
-#include <fstream>
 #include <vector>
 #include <cstdarg>
 #include "ForumManager.h"
-#include "SystemSave.h"
 #include "Interface.h"
 
 using namespace std;
 
 #pragma region Functions
-
-
-
 /* The Split function splits a string that is seperated by the given character and returns the substrings within a vector data structure
  * ex. : "This.is a.test" => {"This","is a","test"} 
  */
@@ -107,10 +102,10 @@ int main(void) {
 	 * 3) Declare needed variables
 	 */
 	System mainSystem;
-	ifstream iforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ifstream ipostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
-	ifstream iuserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
+	ifstream iforumfile ("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ifstream ipostfile  ("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
+	ifstream iuserfile  ("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
 
 	string line , path , name;
 	Forum * tempForum = NULL;
@@ -169,9 +164,7 @@ int main(void) {
 	}
 #pragma endregion
 
-	
 #pragma region User Creator
-
 	oList<User> users;
 	string username, password;
 	int id, rights;
@@ -180,8 +173,7 @@ int main(void) {
 		Parse(line, "I S S I", false, ' ',  4, &id, &username, &password, &rights);
 		users.Add(new User(id, username, password, rights));
 	}
-
-# pragma endregion
+#pragma endregion
 
 	User * currentUser = NULL;
 	
@@ -201,19 +193,14 @@ int main(void) {
 	} while (currentUser == NULL);
 
 	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
-	cout << "You belong in the category "; 
+	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // ONE LINE CODING FTW ! \\(* O *)//
 
-	switch (currentUser->GetRights()) {
-	case 0:
-		break;
-	case 1:
-		break;
-	case 2:
-		break;
-	case 3:
-		break;
-	}
 	
+	
+	ForumManager fma(&mainSystem, &users);
+
+	MainMenu(fma, currentUser);
+
 	/* close input files */
 	iforumfile.close();
 	ithreadfile.close();
@@ -221,15 +208,14 @@ int main(void) {
 	iuserfile.close();
 
 	/* Open files for writting */
-	ofstream oforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ofstream othreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ofstream opostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
-	ofstream ouserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
+	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
+	ofstream ouserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
 
-	SaveSystem(oforumfile, othreadfile, opostfile, mainSystem); // Save system in files 
-	SaveUsers(ouserfile, users);
+	fma.Save(oforumfile, othreadfile, opostfile, ouserfile);
 
-	/* close outpute files */
+	/* close output files */
 	oforumfile.close();
 	othreadfile.close();
 	opostfile.close();
@@ -240,109 +226,4 @@ int main(void) {
 	cin.get();
 	return 0;
 }
-
 #pragma endregion
-
-
-/* DEBUGGING CODE */
-#pragma region navigator
-/*
-System mySystem;
-
-ForumNavigator navigator(&mySystem);
-Forum * forum = NULL;
-Thread * thread = NULL;
-int a, b;
-string s1, s2, s3;
-
-while (true) {
-	cout <<
-		"Forum Navigator and Actions Guide \n" <<
-		"> Visit forum    | Syntax: 1 i     \n" <<
-		"> Visit thread   | Syntax: 2 i     \n" <<
-		"> Back           | Syntax: 3       \n" <<
-		"> Print Current  | Syntax: 4       \n" <<
-		"> Print Contents | Syntax: 5       \n" <<
-		"> Print Content  | Syntax: 6 i     \n" <<
-		"> Create Forum   | Syntax: 7 t     \n" <<
-		"> Create Thread  | Syntax: 8 t u c \n" <<
-		"> Create Post    | Syntax: 9 u c   \n" <<
-		"> Delete Forum   | Syntax: 10 i    \n" <<
-		"> Delete Thread  | Syntax: 11 i    \n" <<
-		"> Delete Post    | Syntax: 12 i    \n" <<
-		"> Exit           | Syntax: 0       \n" <<
-		"Info: i = index , t = title , u = username , c = content \n" << endl;
-	cout << "\n>";
-	cin >> a;
-
-	cin.clear();
-	cin.sync();
-
-	switch (a) {
-	case 1:
-		cout << "Enter index number: " << endl;
-		cin >> b;
-		navigator.VisitForum(b);
-		break;
-	case 2:
-		cout << "Enter index number: " << endl;
-		cin >> b;
-		navigator.VisitThread(b);
-		break;
-	case 3:
-		navigator.Back();
-		break;
-	case 4:
-		navigator.PrintCurrent();
-		break;
-	case 5:
-		navigator.PrintContents();
-		break;
-	case 6:
-		cout << "Enter index number: " << endl;
-		cin >> b;
-		navigator.PrintContent(b);
-		break;
-	case 7:
-		cout << "Enter forum title" << endl;
-		getline(cin, s1);
-		navigator.CreateForum(s1);
-		break;
-	case 8:
-		cout << "Enter threads title , username and content of first post" << endl;
-		getline(cin, s1); getline(cin, s2);	getline(cin, s3);
-		navigator.CreateThread(s1, s2, s3);
-		break;
-	case 9:
-		cout << "Enter writer's username and content" << endl;
-		getline(cin, s1);
-		getline(cin, s2);
-		navigator.CreatePost(s1, s2);
-		break;
-	case 10:
-		cout << "Enter index number: " << endl;
-		cin >> b;
-		navigator.DeleteForum(b);
-		break;
-	case 11:
-		cout << "Enter index number: " << endl;
-		cin >> b;
-		navigator.DeleteThread(b);
-		break;
-	case 12:
-		cout << "Enter index number: " << endl;
-		cin >> b;
-		navigator.DeletePost(b);
-		break;
-	case 0:
-		break;
-	default:
-		break;
-	}
-	if (a == 0) break;
-	cout << "\n" << endl;
-}
-cout << "Exitting" << endl;
-*/
-#pragma endregion
-

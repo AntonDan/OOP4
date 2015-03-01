@@ -36,17 +36,22 @@ bool isNumber(const string & str) {
 	return !str.empty() && ptr == str.end();
 }
 
-void MainMenu(ForumManager & man,  User * user) {
+void MainMenu(ForumManager & nav, User * user) {
+	cout << endl;
+	nav.PrintContents();
+	cout << "\n" << endl;
 	cout << "Select: \n "
 		<< "The ID of the Forum, you wish to visit. \n"
 		<< "L, to Save the current system state and Exit. \n"
 		<< "X, to Exit without Saving. " << endl;
 
+	cout << endl;
+
 	if (user->GetRights() == 3) {
 		cout << "N, to Create a new Forum \n"
 	   		<< "U, to Manage the User Database. " << endl;
 	}
-
+	cout << "\n\n" << ">";
 	string selection;
 	cin.clear();
 	cin.sync();
@@ -55,24 +60,27 @@ void MainMenu(ForumManager & man,  User * user) {
 	selection = Trim(selection);
 
 	if (isNumber(selection)) {
-
+		nav.VisitForum(atoi(selection.c_str()));
+		ForumMenu(nav, user);
 	} else {
-
+		switch (selection[0]) {
+		case 'L':
+			break;
+		case  'X':
+			break;
+		case 'N':
+			if (user->GetRights() < 3) break;
+			cout << "Enter forum name: ";
+			string name;
+			cin.clear();
+			cin.sync();
+			getline(cin ,  name);
+			nav.CreateForum(nav.GetMain(), name);
+			break;
+		}
 	}
 
-	switch (selection[0]) {
-	case 'L':
-		break;
-	case  'X':
-		break;
-	case 'N':
-		if (user->GetRights() < 3) break;
-		cout << "Enter forum name: ";
-		string name;
-		cin >> name;
-		man.CreateForum(man.GetMain(), name);
-		break;
-	}
+
 
 }
 
@@ -112,6 +120,14 @@ void UserMenu(ForumManager & nav, User * user) {
 }
 
 void ForumMenu(ForumManager & nav, User * user){
+	cout << endl;
+	cout << "Forums: " << endl;
+	nav.PrintContents(0);
+	cout << endl;
+	cout << "Threads: " << endl;
+	nav.PrintContents(1);
+	cout << "\n" << endl;
+
 	cout << "Select: \n"
 		<< "F, Visit Forum. \n"
 		<< "T, to Visit Thread menu. \n"

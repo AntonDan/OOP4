@@ -6,7 +6,6 @@
 #pragma region ObjectList
 
 #pragma region oNode
-
 template <class T> class oNode {
 private:
 	T * data;
@@ -44,7 +43,6 @@ public:
 	}
 
 };
-
 #pragma endregion
 
 #pragma region oList
@@ -130,7 +128,6 @@ public:
 
 		oNode<T> * ptr = start;
 
-
 		if (ptr->GetData() == data) return Remove();
 		while (ptr->GetNext()->GetData() != data && ptr->GetNext() != NULL) {
 			ptr = ptr->GetNext();
@@ -161,15 +158,6 @@ public:
 		while (!isEmpty()) {
 			Remove();
 		}
-	}
-
-	void Print() const {
-		oNode<T> * ptr = start;
-		for (int i = 0; i < length; ++i) {
-			cout << *ptr->GetData() << endl;
-			ptr = ptr->GetNext();
-		}
-		//		cout << ptr->GetData() << endl;
 	}
 
 	// OVERLOADS

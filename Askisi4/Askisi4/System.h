@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <fstream>
 #include "DS.h"
 
 using namespace std;
@@ -80,6 +81,7 @@ public:
 	void DeletePost(Post *);
 	Post * RemovePost(Post *);
 	void AddPost(Post *);
+	void Save(ofstream &, string);
 
 	// DESTRUCTORS
 	~Thread();
@@ -102,7 +104,6 @@ public:
 	void DeleteForum(int);
 	void DeleteForum(Forum *);
 	Forum * RemoveForum(Forum *);
-	
 };
 #pragma endregion
 
@@ -135,7 +136,10 @@ public:
 	void DeleteThread(Thread *);
 	Thread * RemoveThread(Thread *);
 	void AddThread(Thread *);
-	
+	void Save(ofstream &, ofstream &, ofstream &, string);
+	void SaveSubforums(ofstream &, ofstream &, ofstream &, string);
+	void SaveThreads(ofstream &, ofstream &, string);
+
 	// DESTRUCTOR
 	~Forum();
 };
@@ -145,7 +149,6 @@ public:
 class System : public SF {
 private:
 	const string title; 
-	oList<Forum> forums; // 
 
 public:
 	// VARS
@@ -158,8 +161,9 @@ public:
 	// GETTERS 
 	string GetTitle() const;
 
-	// DESTRUCTOR
-	~System();
+
+	// METHODS
+	void Save(ofstream &, ofstream &, ofstream &);
 };
 #pragma endregion
 

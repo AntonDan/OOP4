@@ -124,13 +124,19 @@ void Thread::AddPost(Post * post) {
 	posts.Add(post);
 }
 
+void Thread::Save(ofstream & postFile, string path) {
+	/* Get a list of the posts inside the thread and save their contents/data  */
+	for (int i = 0; i < posts.GetLength(); ++i) {
+		Post * cPost = posts[i];
+		postFile << path + "." << cPost->GetID() << " " << atoi(cPost->GetUser().c_str()) << " " << cPost->GetContent() << endl;
+	}
+}
+
 // DESTRUCTORS
 Thread::~Thread() {
 	/* This destructor is unecessary and can be removed */
 	title = "";
 	username = "";
-
-	posts.~oList();
 }
 
 #pragma endregion
@@ -198,7 +204,6 @@ oList<Thread> * Forum::GetThreads() { return &threads; } // Cannot be a constant
 
 SF * Forum::GetParent() const { return parent; }
 
-
 // METHODS
 Thread * Forum::CreateThread(int id, string title, string username, int info) {
 	/* Thread is stored into a temporary variable so it can be returned after added in the list */
@@ -231,12 +236,34 @@ Thread * Forum::RemoveThread(Thread * thread) {
 void Forum::AddThread(Thread * thread) {
 	threads.Add(thread);
 }
+
+void Forum::Save(ofstream & forumFile, ofstream & threadFile, ofstream & postFile, string path) {
+	SaveSubforums(forumFile, threadFile, postFile, path);
+	SaveThreads(threadFile, postFile, path);
+}
  
+void Forum::SaveSubforums(ofstream & forumFile, ofstream & threadFile, ofstream & postFile, string path) {
+	/* Get the subforums of the given forum and save their state as well as their subforums state */
+	for (int i = 0; i < forums.GetLength(); ++i) {
+		Forum * cForum = forums[i];
+		string temppath = path + "." + to_string(i + 1); // Update path
+		forumFile << temppath << " " << cForum->GetTitle() << endl; // Save forum
+		cForum->Save(forumFile, threadFile, postFile, temppath); // Save forum's subforums
+	}
+}
+
+void Forum::SaveThreads(ofstream & threadFile, ofstream & postFile, string path) {
+	/* Get the threads inside the given forum and save their data as well as the posts that they contain */
+	for (int i = 0; i < threads.GetLength(); ++i) {
+		Thread * cThread = threads[i];
+		string tempath = path + "." + to_string(cThread->GetID()); // Update path
+		threadFile << tempath << " " << ((cThread->isSticky()) ? ("S") : ("N")) << " " << ((cThread->isLocked()) ? ("L") : ("N")) << " " << atoi(cThread->GetUserName().c_str()) << " " << cThread->GetTitle() << endl; // Save thread
+		cThread->Save(postFile, tempath); // Save posts inside thread
+	}
+}
+
 // DESTRUCTOR
 Forum::~Forum() {
-	/* This destructor is unecessary and can be removed */
-	forums.~oList();
-	threads.~threads();
 	title = "";
 }
 #pragma endregion
@@ -248,9 +275,17 @@ System::System() : title("D.I.T.Lists") , LastThreadID(0) , LastPostID(0) {} // 
 // GETTERS 
 string System::GetTitle() const { return title; }
 
-// DESTRUCTOR
-System::~System() {
-	forums.Destroy();
+// METHODS
+void System::Save(ofstream & forumFile, ofstream & threadFile, ofstream & postFile) {
+	/* Get the main forums and save the state of each one of them and their subforums
+	* also initiate a path for every one of the above forums (a path should start a single integer and unfold like this: 2.1.5.3.1) */
+	string path;
+	for (int i = 0; i < forums.GetLength(); ++i) {
+		path = to_string(i + 1);
+		forumFile << path << " " << forums[i]->GetTitle() << endl;   // Save main forum
+		forums[i]->Save(forumFile, threadFile, postFile, path); // Save subforums
+	}
+
 }
 #pragma endregion
 

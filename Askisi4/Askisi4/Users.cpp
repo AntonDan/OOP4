@@ -13,7 +13,6 @@ Visitor::Visitor() {
 
 #pragma endregion
 
-
 #pragma region User 
 
 //CONSTRUCTOR
@@ -21,7 +20,7 @@ User::User(int id, string name, string code, int rights) : Visitor() {
 	this->id = id;
 	username = name;
 	password = code;
-	rights = rights;
+	this->rights = rights;
 }
 
 //SETTERS

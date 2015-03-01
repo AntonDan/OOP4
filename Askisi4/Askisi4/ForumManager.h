@@ -21,7 +21,8 @@ public:
 	Forum * GetCurrentForum() const;
 	Thread * GetCurrentThread() const;
 
-	// METHODS
+	// METHODS 
+	/* so tidy , much OCD , wow */
 	void VisitForum(int);
 
 	void VisitForum(Forum *);
@@ -32,7 +33,7 @@ public:
 
 	void PrintCurrent() const;
 
-	void PrintContents();
+	void PrintContents(int = 0);
 
 	void PrintContent(int) const;
 
@@ -69,6 +70,13 @@ public:
 	bool RenameUser(string, string);
 
 	bool ChangeUserPassword(string, string);
+	
+	void Save(ofstream &, ofstream &, ofstream &, ofstream &);
+	
+	void SaveSystem(ofstream &, ofstream &, ofstream &);
+
+	void SaveUsers(ofstream &);
+
 };
 
 #pragma endregion
