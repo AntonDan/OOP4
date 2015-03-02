@@ -199,7 +199,7 @@ int main(void) {
 	
 	ForumManager fma(&mainSystem, &users);
 
-	MainMenu(fma, currentUser);
+	if (!MainMenu(fma, currentUser)) return 0;
 
 	/* close input files */
 	iforumfile.close();
@@ -220,10 +220,7 @@ int main(void) {
 	othreadfile.close();
 	opostfile.close();
 	ouserfile.close();
-	
-	cin.clear();
-	cin.sync();
-	cin.get();
+
 	return 0;
 }
 #pragma endregion

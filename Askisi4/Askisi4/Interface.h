@@ -10,12 +10,12 @@
 
 string Trim(string &);
 
-void MainMenu(ForumManager &, User *);
+bool MainMenu(ForumManager &, User *);
 
-void UserMenu(ForumManager &, User *);
+bool UserMenu(ForumManager &, User *);
 
-void ForumMenu(ForumManager &, User *);
+bool ForumMenu(ForumManager &, User *);
 
-void ThreadMenu(ForumManager &, User *);
+bool ThreadMenu(ForumManager &, User *);
 
 #endif

@@ -36,7 +36,7 @@ bool isNumber(const string & str) {
 	return !str.empty() && ptr == str.end();
 }
 
-void MainMenu(ForumManager & nav, User * user) {
+bool MainMenu(ForumManager & nav, User * user) {
 	cout << endl;
 	nav.PrintContents();
 	cout << "\n" << endl;
@@ -60,23 +60,45 @@ void MainMenu(ForumManager & nav, User * user) {
 	selection = Trim(selection);
 
 	if (isNumber(selection)) {
-		nav.VisitForum(atoi(selection.c_str()));
-		ForumMenu(nav, user);
+		int id = atoi(selection.c_str());
+		if (id > nav.GetMain()->GetForums()->GetLength() || id <= 0) {
+			cout << "Invalid ID entered" << endl;
+			return MainMenu(nav, user);
+		} else {
+			nav.VisitForum(id);
+			return ForumMenu(nav, user);
+		}
 	} else {
-		switch (selection[0]) {
+		switch (toupper(selection[0])) {
 		case 'L':
-			break;
+			cout << "Saving state and exiting..." << endl;
+			return true;
 		case  'X':
-			break;
-		case 'N':
-			if (user->GetRights() < 3) break;
-			cout << "Enter forum name: ";
-			string name;
-			cin.clear();
-			cin.sync();
-			getline(cin ,  name);
-			nav.CreateForum(nav.GetMain(), name);
-			break;
+			cout << "Exiting..." << endl;
+			return false;
+		case 'N': {
+					  if (user->GetRights() < 3) {
+						  cout << "Invalid command given" << endl;
+						  return MainMenu(nav, user);
+					  }
+					  cout << "Enter forum name: ";
+					  string name;
+					  cin.clear();
+					  cin.sync();
+					  getline(cin, name);
+					  nav.CreateForum(nav.GetMain(), name);
+					  cout << "Forum created!" << endl;
+					  return MainMenu(nav, user);
+		}
+		case 'U':
+			if (user->GetRights() < 3) {
+				cout << "Invalid command given" << endl;
+				return MainMenu(nav, user);
+			}
+			return UserMenu(nav , user);
+		default:
+			cout << "Invalid command given" << endl;
+			return MainMenu(nav, user);
 		}
 	}
 
@@ -84,7 +106,7 @@ void MainMenu(ForumManager & nav, User * user) {
 
 }
 
-void UserMenu(ForumManager & nav, User * user) {
+bool UserMenu(ForumManager & nav, User * user) {
 	cout << "Select: \n"
 		<< "C, to view Users Catalogue. \n"
 		<< "M, to Change Rights. \n"
@@ -94,12 +116,12 @@ void UserMenu(ForumManager & nav, User * user) {
 		<< "L, to Save current System and Exit. \n"
 		<< "X, to Exit without Saving. " << endl;
 
-	char selection;
+	string selection;
 	cin.clear();
 	cin.sync();
 	cin >> selection;
 
-	switch (selection){
+	switch (toupper(selection[0])){
 	case 'C':
 		break;
 	case 'M':
@@ -117,9 +139,11 @@ void UserMenu(ForumManager & nav, User * user) {
 	default:
 		break;
 	}
+
+	return true;
 }
 
-void ForumMenu(ForumManager & nav, User * user){
+bool ForumMenu(ForumManager & nav, User * user){
 	cout << endl;
 	cout << "Forums: " << endl;
 	nav.PrintContents(0);
@@ -144,17 +168,18 @@ void ForumMenu(ForumManager & nav, User * user){
 			<< "M, to Move Forum. " << endl;
 	}
 
-	char selection;
+	string selection;
 	cin.clear();
 	cin.sync();
 	cin >> selection;
 
-	switch (selection){
+	switch (toupper(selection[0])){
 	case 'F':
 		break;
 	case 'T':
 		break;
 	case 'B':
+		return MainMenu(nav, user);
 		break;
 	case 'C':
 		break;
@@ -179,10 +204,11 @@ void ForumMenu(ForumManager & nav, User * user){
 	default:
 		break;
 	}
+	return true;
 	
 }
 
-void ThreadMenu(ForumManager & nav, User * user){
+bool ThreadMenu(ForumManager & nav, User * user){
 	cout << "Select: \n"
 		<< "B, to go Back. \n"
 		<< "R, to Reply to a Post. \n"
@@ -204,19 +230,19 @@ void ThreadMenu(ForumManager & nav, User * user){
 	cin.clear();
 	cin.sync();
 	cin >> selection;
-	string content;
 
 	switch (selection){
 	case 'B':
 		nav.Back();
 		break;
-	case 'R':
-		if (user->GetRights() < 1) break;
-		
-		cin >> content;
-		nav.GetMain()->LastPostID += 1;
-		nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
-		break;
+	case 'R': {
+				  if (user->GetRights() < 1) break;
+				  string content;
+				  cin >> content;
+				  nav.GetMain()->LastPostID += 1;
+				  nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
+				  break;
+	}
 	case 'H':
 		
 		break;
@@ -249,4 +275,5 @@ void ThreadMenu(ForumManager & nav, User * user){
 	default:
 		break;
 	}
+	return true;
 }
