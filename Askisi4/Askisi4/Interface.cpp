@@ -123,19 +123,74 @@ bool UserMenu(ForumManager & nav, User * user) {
 
 	switch (toupper(selection[0])){
 	case 'C':
-		break;
-	case 'M':
-		break;
-	case 'D':
-		break;
-	case 'U':
-		break;
-	case 'P':
-		break;
-	case 'L':
-		break;
-	case 'X':
-		break;
+		nav.PrintUsers();
+		return MainMenu(nav, user);
+	case 'M':{
+		int rights;
+		string username;
+
+		cout << "Enter username: ";
+		cin >> username;
+		cout << "\nEnter rights: ";
+		cin >> rights;
+
+		if (user->GetRights() > 3 || user->GetRights() < 1) {
+			cout << "Invalid rigts given" << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			nav.ChangeUserRights(username, rights);
+			return MainMenu(nav, user);
+		}
+	}
+	case 'D':{
+		string username;
+		cout << "Enter username: ";
+		cin >> username;
+
+		nav.DeleteUser(username);
+		return MainMenu(nav, user);
+	}
+		
+	case 'U':{
+		string curr_username, new_username;
+		cout << "Enter current username: ";
+		cin >> curr_username;
+		cout << "Enter new username: ";
+		cin >> new_username;
+
+		if (nav.RenameUser(curr_username, new_username)){
+			return MainMenu(nav, user);
+		}
+		else{
+			cout << "Invalid current username given" << endl;
+			return MainMenu(nav, user);
+		}
+	}		
+	case 'P':{
+		string username;
+		string newcode;
+		cout << "Enter  username: ";
+		cin >> username;
+		cout << "Enter new upassword: ";
+		cin >> newcode;
+
+		if (nav.ChangeUserPassword(username, newcode)){
+			return MainMenu(nav, user);
+		}
+		else{
+			cout << "Invalid username given" << endl;
+			return MainMenu(nav, user);
+		}
+	}		
+	case 'L':{
+		cout << "Saving state and exiting..." << endl;
+		return true;
+	}		
+	case 'X':{
+		cout << "Exiting..." << endl;
+		return false;
+	}
 	default:
 		break;
 	}
@@ -190,17 +245,33 @@ bool ForumMenu(ForumManager & nav, User * user){
 	case 'X':
 		break;
 	case 'N':
-		if (user->GetRights() < 3) break;
-		break;
+		if (user->GetRights() < 3){
+			return MainMenu(nav, user);
+		}
+		else{
+			// Create Forum to be called
+		}
 	case 'E':
-		if (user->GetRights() < 3) break;
-		break;
+		if (user->GetRights() < 3){
+			return MainMenu(nav, user);
+		}
+		else{
+			// Rename Forum to be called
+		}
 	case 'D':
-		if (user->GetRights() < 3) break;
-		break;
+		if (user->GetRights() < 3){
+			return MainMenu(nav, user);
+		}
+		else{
+			// Delete Forum to be called
+		}
 	case 'M':
-		if (user->GetRights() < 3) break;
-		break;
+		if (user->GetRights() < 3){
+			return MainMenu(nav, user);
+		}
+		else{
+			// Move Forum to be called
+		}
 	default:
 		break;
 	}
@@ -243,35 +314,81 @@ bool ThreadMenu(ForumManager & nav, User * user){
 				  nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
 				  break;
 	}
-	case 'H':
-		
-		break;
-	case 'L':
-
-		break;
-	case 'X':
-		break;
-	case 'D':
-		if (user->GetRights() < 2) break;
-		break;
-	case 'M':
-		if (user->GetRights() < 2) break;
-		break;
-	case 'E':
-		if (user->GetRights() < 2) break;
-		break;
-	case 'Y':
-		if (user->GetRights() < 2) break;
-		break;
-	case 'K':
-		if (user->GetRights() < 2) break;
-		break;
-	case 'A':
-		if (user->GetRights() < 2) break;
-		break;
-	case 'S':
-		if (user->GetRights() < 2) break;
-		break;
+	case 'H':{
+		cout << "Returning to Main Menu" << endl;
+		return MainMenu(nav, user);
+	}		
+	case 'L':{
+		cout << "Saving state and exiting..." << endl;
+		return true;
+	}
+	case 'X':{
+		cout << "Exiting..." << endl;
+		return false;
+	}		
+	case 'D':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Delete Thread to be called
+		}
+	}
+	case 'M':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Move Thread to be called
+		}
+	}
+	case 'E':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Rename Thread to be called
+		}
+	}
+	case 'Y':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Set Sticky Thread to be called
+		}
+	}
+	case 'K':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Set Locked Thread to be called
+		}
+	}
+	case 'A':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Delete Post to be called
+		}
+	}
+	case 'S':{
+		if (user->GetRights() < 2) {
+			cout << "Invalid command given " << endl;
+			return MainMenu(nav, user);
+		}
+		else{
+			// Move Post to be called
+		}
+	}		
 	default:
 		break;
 	}
