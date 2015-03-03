@@ -63,6 +63,8 @@ public:
 
 	void RenameForum(Forum *, string);
 
+	void PrintUsers() const;
+
 	void ChangeUserRights(string, int);
 
 	void DeleteUser(string);

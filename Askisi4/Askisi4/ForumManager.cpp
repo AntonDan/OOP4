@@ -183,6 +183,12 @@ void ForumManager::RenameForum(Forum * forum, string title) {
 	forum->SetTitle(title);
 }
 
+void ForumManager::PrintUsers() const {
+	for (int i = 0; i < users->GetLength(); ++i) {
+		cout << "ID: " << (*users)[i]->GetId() << "  | Rights: " << (*users)[i]->GetRights() << "  | Username: " << (*users)[i]->GetUsername() << endl;
+	}
+}
+
 void ForumManager::ChangeUserRights(string username , int rights) {
 	for (int i = 0; i < users->GetLength(); ++i){
 		if ((*users)[i]->GetUsername() == username){
