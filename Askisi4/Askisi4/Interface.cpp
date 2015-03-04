@@ -84,6 +84,7 @@ bool UserMenu(ForumManager & nav, User * user) {
 		<< "P, to Change Password. \n"
 		<< "L, to Save current System and Exit. \n"
 		<< "X, to Exit without Saving. " << endl;
+	cout << "\n\n" << ">";
 
 	string selection;
 	cin.clear();
@@ -106,8 +107,7 @@ bool UserMenu(ForumManager & nav, User * user) {
 		if (user->GetRights() > 3 || user->GetRights() < 1) {
 			cout << "Invalid rights given" << endl;
 			return UserMenu(nav, user);
-		}
-		else{
+		} else {
 			nav.ChangeUserRights(username, rights);
 			return UserMenu(nav, user);
 		}
@@ -130,8 +130,7 @@ bool UserMenu(ForumManager & nav, User * user) {
 
 		if (nav.RenameUser(curr_username, new_username)){
 			return UserMenu(nav, user);
-		}
-		else{
+		} else {
 			cout << "Invalid current username given" << endl;
 			return UserMenu(nav, user);
 		}
@@ -146,8 +145,7 @@ bool UserMenu(ForumManager & nav, User * user) {
 
 		if (nav.ChangeUserPassword(username, newcode)){
 			return UserMenu(nav, user);
-		}
-		else{
+		} else {
 			cout << "Invalid username given" << endl;
 			return UserMenu(nav, user);
 		}
@@ -193,15 +191,22 @@ bool ForumMenu(ForumManager & nav, User * user){
 			<< "M, to Move Forum. " << endl;
 	}
 
+	cout << "\n\n" << ">";
+
 	string selection;
 	cin.clear();
 	cin.sync();
 	cin >> selection;
 
 	switch (toupper(selection[0])){
-	case 'F':{
-		return ForumMenu(nav, user);
-	}		
+	case 'F': {
+				  int id;
+
+				  cin >> id;
+				  cout << "Enter forum ID" << endl;
+				  nav.VisitForum(id);
+				  return ForumMenu(nav, user);
+	}
 	case 'T':{
 		int id;
 
@@ -241,8 +246,7 @@ bool ForumMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 3){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 
@@ -257,8 +261,7 @@ bool ForumMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 3){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 
@@ -273,8 +276,7 @@ bool ForumMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 3){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 
@@ -290,8 +292,7 @@ bool ForumMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 3){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 
@@ -338,6 +339,8 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			<< "S, to Move Post." << endl;
 	}
 
+	cout << "\n\n" << ">";
+
 	char selection;
 	cin.clear();
 	cin.sync();
@@ -371,8 +374,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			Thread * temp = nav.GetCurrentThread();
 			nav.Back();
 			nav.DeleteThread(temp);
@@ -383,8 +385,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 
@@ -426,8 +427,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			nav.ChangeSticky(nav.GetCurrentThread());
 			cout << "Thread is set sticky" << endl;
 			return ThreadMenu(nav, user);
@@ -437,8 +437,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			nav.ChangeLocked(nav.GetCurrentThread());
 			cout << "Thread is set locked " << endl;
 			return ThreadMenu(nav, user);
@@ -448,8 +447,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 
@@ -465,8 +463,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			cin.clear();
 			cin.sync();
 

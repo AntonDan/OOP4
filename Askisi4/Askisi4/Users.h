@@ -7,25 +7,18 @@ using namespace std;
 
 #pragma region Accounts
 
-class Visitor {
-protected:
-	int rights;
-private:
-
-public:
-	Visitor();
-
-};
-
-class User : public Visitor {
+class User {
 protected:
 	int id;
 	string password;
 	string username;
+	int rights;
 
 public:
 	//CONSTRUCTOR
 	User(int, string, string, int);
+
+	User(string, string, int);
 
 	//METHODS
 

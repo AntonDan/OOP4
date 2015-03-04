@@ -37,6 +37,8 @@ public:
 
 	void PrintContent(int) const;
 
+	bool Register(string user, string password);
+
 	void CreateThread(Forum *, string, string, string);
 
 	void CreatePost(Thread *, int, string, string);

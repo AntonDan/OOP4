@@ -4,20 +4,20 @@
 #include <string>
 #include "Users.h"
 
-#pragma region Visitor
-
-//CONSTRUCTOR
-Visitor::Visitor() {
-	rights = 0;
-}
-
-#pragma endregion
 
 #pragma region User 
 
 //CONSTRUCTOR
-User::User(int id, string name, string code, int rights) : Visitor() {
+User::User(int id, string name, string code, int rights) {
 	this->id = id;
+	username = name;
+	password = code;
+	this->rights = rights;
+}
+
+
+User::User(string name, string code, int rights) {
+	this->id = -1;
 	username = name;
 	password = code;
 	this->rights = rights;

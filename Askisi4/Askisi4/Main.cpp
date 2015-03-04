@@ -21,16 +21,22 @@ User * Validate(string username, string password, oList<User> const & users) {
 #pragma endregion
 
 #pragma region main
-int main(void) {
+int main(int argc, char * argv[] ) {
 	/* 1) Create main system 
 	 * 2) Open to read database files
 	 * 3) Declare needed variables
 	 */
 	System mainSystem;
+	/*
 	ifstream iforumfile ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ifstream ipostfile  ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 	ifstream iuserfile  ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
+	*/
+	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
+	ifstream iuserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
 
 	string line , path , name;
 	Forum * tempForum = NULL;
@@ -100,17 +106,48 @@ int main(void) {
 	}
 #pragma endregion
 
+	ForumManager fma(&mainSystem, &users);
+
+	if (argc > 1) {
+		if (argv[1] = "-R") {
+			string usm, pass;
+			while(true) {
+				cout << "Registration Form:" << endl;
+				cout << "Username:";
+				cin >> usm;
+				cout << "Password";
+				cin >> password;
+				if (password.size() < 6) {
+					cout << "Your password has to be at least 6 characters long" << endl; // FEEL THE PAIN! 
+				} else if (!fma.Register(usm,pass)) {
+					cout << "Registration failed! Given username is not available." << endl;
+				} else {
+					cout << "Registration complete!" << endl;
+					cout << "Account created with: \n" <<
+						"Username: " << usm << "\n" <<
+						"Password: " << pass << endl;
+					break;
+				}
+			}
+
+		}
+	}
+
 	User * currentUser = NULL;
-	
+
 	cout << "\t===========================\n\t||Welcome to D.I.T Lists!|| \n\t===========================\n\n"
 		<< "Please type in username and password \n";
 	do {
 		cout << "Username: ";
-		cin >> username;
+		getline(cin, username);
 		cout << "Password: ";
-		cin >> password;
+		getline(cin, password);
 
 		currentUser = Validate(username, password, users);
+
+		if (password == "" && username == "") {
+			currentUser = new User("Guest", "", 0);
+		}
 
 		if (currentUser == NULL) {
 			cout << "Incorrect username or password. \n Please try again." << endl;
@@ -118,12 +155,9 @@ int main(void) {
 	} while (currentUser == NULL);
 
 	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
-	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // ONE LINE CODING FTW ! \\(* O *)//
+	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // ONE LINER CODING FTW ! \\(* O *)//
 
 	
-	
-	ForumManager fma(&mainSystem, &users);
-
 	if (!MainMenu(fma, currentUser)) return 0;
 
 	/* close input files */
@@ -133,11 +167,16 @@ int main(void) {
 	iuserfile.close();
 
 	/* Open files for writting */
+	/*	
 	ofstream oforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ofstream othreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ofstream opostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 	ofstream ouserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
-
+	*/
+	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
+	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
+	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
+	ofstream ouserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
 	fma.Save(oforumfile, othreadfile, opostfile, ouserfile);
 
 	/* close output files */

@@ -79,6 +79,7 @@ void ForumManager::PrintContents(int type) {
 			forums = currentForum->GetForums();
 			for (int i = 0; i < forums->GetLength(); ++i) {
 				cout << (*forums)[i]->GetTitle() << "[ID: " << i + 1 << "] " << endl;
+
 			}
 		} 
 		if (type > 0) {
@@ -108,6 +109,16 @@ void ForumManager::PrintContent(int index) const {
 	} else {
 		cout << main->GetTitle() << endl;
 	}
+}
+
+bool ForumManager::Register(string username, string password) {
+	for (int i = 0; i < users->GetLength(); ++i){
+		/* If you want to check if a smaller ID is available (for example when a user is deleted) all you have to do is run a while loop until you find an id gab in the user list
+		 * Note: For this to work the list has to be sorted */
+		if ((*users)[i]->GetUsername() == username) return false; 
+	}
+	users->Add(new User(users->GetLength() + 1, username, password, 1));
+	return true;
 }
 
 // USER
