@@ -33,10 +33,10 @@ void ForumManager::VisitForum(int index) {
 
 void ForumManager::VisitForum(Forum * forum) { currentForum = forum; }
 
-void ForumManager::VisitThread(int index) {
+void ForumManager::VisitThread(int id) {
 	/* If we are inside a forum (threads do not exist directly under system) visit the thread */
 	if (currentForum != NULL) {
-		currentThread = currentForum->GetThread(index);
+		currentThread = currentForum->GetThreadByID(id);
 	}
 }
 
@@ -111,9 +111,11 @@ void ForumManager::PrintContent(int index) const {
 }
 
 // USER
-void ForumManager::CreateThread(Forum * forum, int TID, int PID, string title, string username, string content) {
+void ForumManager::CreateThread(Forum * forum, string title, string username, string content) {
 	/* Create a thread and a post inside it */
-	(forum->CreateThread(TID, title, username))->CreatePost(PID, username, content);
+	main->LastPostID += 1;
+	main->LastThreadID += 1;
+	(forum->CreateThread(main->LastThreadID, title, username))->CreatePost(main->LastPostID, username, content);
 }
 
 void ForumManager::CreatePost(Thread * thread, int PID, string username, string content) {

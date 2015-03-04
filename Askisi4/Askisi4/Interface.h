@@ -7,6 +7,7 @@
 #include <vector>
 #include <cstdarg>
 #include "ForumManager.h"
+#include "Functions.h"
 
 string Trim(string &);
 

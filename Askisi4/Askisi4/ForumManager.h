@@ -37,7 +37,7 @@ public:
 
 	void PrintContent(int) const;
 
-	void CreateThread(Forum *, int, int, string, string, string);
+	void CreateThread(Forum *, string, string, string);
 
 	void CreatePost(Thread *, int, string, string);
 

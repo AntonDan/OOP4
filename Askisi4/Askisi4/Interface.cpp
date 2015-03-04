@@ -1,45 +1,14 @@
 ﻿#include "stdafx.h"
-#include <cctype>
 #include "Interface.h"
+
 
 using namespace std;
 
-/* The Trim function removes all whitespaces (char(32)) from the end and start of the given string */
-string Trim(string & str) {
-	if (str.length() == 0) return "";
-	string new_str = "";
-
-	unsigned int i, j;
-	for (i = 0; i < str.length(); ++i)
-	if (str[i] != ' ')	break;
-
-	for (j = str.length() - 1; j > 0; --j)
-	if (str[j] != ' ') 	break;
-
-	for (unsigned int k = i; k <= j; ++k)
-		new_str += str[k];
-
-	return new_str;
-}
-
-bool isNumber(const string & str) {
-	/* Can be implemented without iterators, but we like to keep a variety on our 
-	 * solutions. (Alternative solution would be using the function overload []) 
-	 * 1) Start (using a pointer) fro, the beginning of the string 
-	 * 2) For every pointer to a character inside the given string , check if it is a digit 
-	 *    if yes, move to the next character. If not, break out of the loop 
-	 * 3) if we have reached the end of the string without breaking out of the loop (and the string isn't empty) return true 
-	 *    else return false
-	 */
-	string::const_iterator ptr = str.begin();
-	while (ptr != str.end() && isdigit(*ptr)) ++ptr;
-	return !str.empty() && ptr == str.end();
-}
 
 bool MainMenu(ForumManager & nav, User * user) {
 	cout << endl;
 	nav.PrintContents();
-	cout << "\n" << endl;
+	cout << "\n\n" << endl;
 	cout << "Select: \n "
 		<< "The ID of the Forum, you wish to visit. \n"
 		<< "L, to Save the current system state and Exit. \n"
@@ -107,7 +76,7 @@ bool MainMenu(ForumManager & nav, User * user) {
 }
 
 bool UserMenu(ForumManager & nav, User * user) {
-	cout << "Select: \n"
+	cout << "\n\nSelect: \n"
 		<< "C, to view Users Catalogue. \n"
 		<< "M, to Change Rights. \n"
 		<< "D, to Delete User. \n"
@@ -124,7 +93,7 @@ bool UserMenu(ForumManager & nav, User * user) {
 	switch (toupper(selection[0])){
 	case 'C':
 		nav.PrintUsers();
-		return MainMenu(nav, user);
+		return UserMenu(nav, user);
 	case 'M':{
 		int rights;
 		string username;
@@ -135,12 +104,12 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cin >> rights;
 
 		if (user->GetRights() > 3 || user->GetRights() < 1) {
-			cout << "Invalid rigts given" << endl;
-			return MainMenu(nav, user);
+			cout << "Invalid rights given" << endl;
+			return UserMenu(nav, user);
 		}
 		else{
 			nav.ChangeUserRights(username, rights);
-			return MainMenu(nav, user);
+			return UserMenu(nav, user);
 		}
 	}
 	case 'D':{
@@ -149,7 +118,7 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cin >> username;
 
 		nav.DeleteUser(username);
-		return MainMenu(nav, user);
+		return UserMenu(nav, user);
 	}
 		
 	case 'U':{
@@ -160,11 +129,11 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cin >> new_username;
 
 		if (nav.RenameUser(curr_username, new_username)){
-			return MainMenu(nav, user);
+			return UserMenu(nav, user);
 		}
 		else{
 			cout << "Invalid current username given" << endl;
-			return MainMenu(nav, user);
+			return UserMenu(nav, user);
 		}
 	}		
 	case 'P':{
@@ -176,11 +145,11 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cin >> newcode;
 
 		if (nav.ChangeUserPassword(username, newcode)){
-			return MainMenu(nav, user);
+			return UserMenu(nav, user);
 		}
 		else{
 			cout << "Invalid username given" << endl;
-			return MainMenu(nav, user);
+			return UserMenu(nav, user);
 		}
 	}		
 	case 'L':{
@@ -192,7 +161,8 @@ bool UserMenu(ForumManager & nav, User * user) {
 		return false;
 	}
 	default:
-		break;
+		cout << "Invalid command given" << endl;
+		return UserMenu(nav, user);
 	}
 
 	return true;
@@ -207,7 +177,7 @@ bool ForumMenu(ForumManager & nav, User * user){
 	nav.PrintContents(1);
 	cout << "\n" << endl;
 
-	cout << "Select: \n"
+	cout << "\n\nSelect: \n"
 		<< "F, Visit Forum. \n"
 		<< "T, to Visit Thread menu. \n"
 		<< "B, to go Back. \n"
@@ -229,58 +199,129 @@ bool ForumMenu(ForumManager & nav, User * user){
 	cin >> selection;
 
 	switch (toupper(selection[0])){
-	case 'F':
-		break;
-	case 'T':
-		break;
-	case 'B':
+	case 'F':{
+		return ForumMenu(nav, user);
+	}		
+	case 'T':{
+		int id;
+
+		cout << "Enter Thread ID" << endl;
+		cin >> id;
+		nav.VisitThread(id);
+		return ThreadMenu(nav, user);
+	}		
+	case 'B':{
 		return MainMenu(nav, user);
-		break;
-	case 'C':
-		break;
-	case 'H':
-		break;
-	case 'L':
-		break;
-	case 'X':
-		break;
+	}
+	case 'C':{
+		cin.clear();
+		cin.sync();
+		
+		string title, content;
+
+		cout << "Enter title: ";
+		getline(cin, title);
+		cout << "Enter content: ";
+		getline(cin, content);
+		
+		nav.CreateThread(nav.GetCurrentForum(),title, user->GetUsername(), content);
+
+		return ForumMenu(nav, user);
+	}		
+	case 'H':{
+		return MainMenu(nav, user);
+	}		
+	case 'L':{
+		return true;
+	}		
+	case 'X':{
+		return false;
+	}		
 	case 'N':
 		if (user->GetRights() < 3){
-			return MainMenu(nav, user);
+			cout << "Invalid command given" << endl;
+			return ForumMenu(nav, user);
 		}
 		else{
-			// Create Forum to be called
+			cin.clear();
+			cin.sync();
+
+			string title;
+
+			cout << "Enter title: ";
+			getline(cin, title);
+			nav.CreateForum(nav.GetCurrentForum(), title);
+			return ForumMenu(nav, user);
 		}
 	case 'E':
 		if (user->GetRights() < 3){
-			return MainMenu(nav, user);
+			cout << "Invalid command given" << endl;
+			return ForumMenu(nav, user);
 		}
 		else{
-			// Rename Forum to be called
+			cin.clear();
+			cin.sync();
+
+			string title;
+
+			cout << "Enter title:";
+			getline(cin, title);
+			nav.RenameForum(nav.GetCurrentForum(), title);
+			return ForumMenu(nav, user);
 		}
 	case 'D':
 		if (user->GetRights() < 3){
-			return MainMenu(nav, user);
+			cout << "Invalid command given" << endl;
+			return ForumMenu(nav, user);
 		}
 		else{
-			// Delete Forum to be called
+			cin.clear();
+			cin.sync();
+
+			int index;
+
+			cout << "Type ID of Forum to be deleted: ";
+			cin >> index;
+			nav.DeleteForum(nav.GetCurrentForum(), index);
+
+			return ForumMenu(nav, user);
 		}
 	case 'M':
 		if (user->GetRights() < 3){
-			return MainMenu(nav, user);
+			cout << "Invalid command given" << endl;
+			return ForumMenu(nav, user);
 		}
 		else{
-			// Move Forum to be called
+			cin.clear();
+			cin.sync();
+
+			int id;
+			string path;
+
+			cout << "Type ID of Forum to be moved: ";
+			cin >> id;
+			cout << "Type path: ";
+			cin >> path;
+
+			vector<string> tokens = Split(path,'.');
+			SF * tempForum = nav.GetMain();
+			for (unsigned int i = 0; i < tokens.size(); ++i){
+				tempForum = tempForum->GetForum(atoi(tokens[i].c_str()));
+			}
+
+			nav.MoveForum(nav.GetCurrentForum()->GetForum(id), tempForum);
+			return ForumMenu(nav, user);
 		}
 	default:
-		break;
+		cout << "Invalid command given" << endl;
+		return ForumMenu(nav, user);
 	}
 	return true;
 	
 }
 
 bool ThreadMenu(ForumManager & nav, User * user){
-	cout << "Select: \n"
+	cout << "\n\nSelect: \n"
 		<< "B, to go Back. \n"
 		<< "R, to Reply to a Post. \n"
 		<< "H, to Return to Main Menu. \n"
@@ -312,7 +353,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 				  cin >> content;
 				  nav.GetMain()->LastPostID += 1;
 				  nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
-				  break;
+				  return ThreadMenu(nav, user);
 	}
 	case 'H':{
 		cout << "Returning to Main Menu" << endl;
@@ -332,7 +373,10 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Delete Thread to be called
+			Thread * temp = nav.GetCurrentThread();
+			nav.Back();
+			nav.DeleteThread(temp);
+			return ThreadMenu(nav, user);
 		}
 	}
 	case 'M':{
@@ -341,7 +385,24 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Move Thread to be called
+			cin.clear();
+			cin.sync();
+
+			string path;
+
+			cout << "Type path: ";
+			cin >> path;
+
+			vector<string> tokens = Split(path, '.');
+			Forum * tempForum = nav.GetMain()->GetForum((atoi(tokens[0].c_str())));
+			for (unsigned int i = 1; i < tokens.size(); ++i){
+				tempForum = tempForum->GetForum(atoi(tokens[i].c_str()));
+			}
+
+			Thread * temp = nav.GetCurrentThread();
+			nav.Back();
+			nav.MoveThread(temp, tempForum);
+			return ForumMenu(nav, user);
 		}
 	}
 	case 'E':{
@@ -350,7 +411,15 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Rename Thread to be called
+			cin.clear();
+			cin.sync();
+
+			string name;
+
+			cout << "Type in name: ";
+			getline(cin, name);
+			nav.RenameThread(nav.GetCurrentThread(), name);
+			return ThreadMenu(nav, user);
 		}
 	}
 	case 'Y':{
@@ -359,7 +428,9 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Set Sticky Thread to be called
+			nav.ChangeSticky(nav.GetCurrentThread());
+			cout << "Thread is set sticky" << endl;
+			return ThreadMenu(nav, user);
 		}
 	}
 	case 'K':{
@@ -368,7 +439,9 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Set Locked Thread to be called
+			nav.ChangeLocked(nav.GetCurrentThread());
+			cout << "Thread is set locked " << endl;
+			return ThreadMenu(nav, user);
 		}
 	}
 	case 'A':{
@@ -377,7 +450,15 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Delete Post to be called
+			cin.clear();
+			cin.sync();
+
+			int id;
+
+			cout << "Type in the ID of the Post to be deleted: ";
+			cin >> id;
+			nav.DeletePost(nav.GetCurrentThread()->GetPostByID(id));
+			return ThreadMenu(nav, user);
 		}
 	}
 	case 'S':{
@@ -386,11 +467,34 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			// Move Post to be called
+			cin.clear();
+			cin.sync();
+
+			string path;
+			int id;
+
+			cout << "Type path: ";
+			cin >> path;
+
+			cout << "Type in the ID of the Post to be moved: ";
+			cin >> id;
+
+
+			vector<string> tokens = Split(path, '.');
+			Forum * tempForum = nav.GetMain()->GetForum((atoi(tokens[0].c_str())));
+			for (unsigned int i = 1; i < tokens.size() - 1; ++i){
+				tempForum = tempForum->GetForum(atoi(tokens[i].c_str()));
+			}
+			Thread * tempThread = tempForum->GetThreadByID(atoi(tokens[tokens.size()-1].c_str()));
+			Post * temp = nav.GetCurrentThread()->GetPost(id);
+			nav.Back();
+			nav.MovePost(temp, tempThread);
+			return ThreadMenu(nav, user);
 		}
 	}		
 	default:
-		break;
+		cout << "Invalid command given" << endl;
+		return ThreadMenu(nav, user);
 	}
 	return true;
 }
