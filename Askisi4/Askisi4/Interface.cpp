@@ -4,6 +4,66 @@
 
 using namespace std;
 
+bool RegistrationMenu(ForumManager & nav) {
+	User * currentUser;
+	string usm, pass;
+	cout << endl;
+	cout << "\t===========================\n\t||Welcome to D.I.T Lists!|| \n\t===========================\n\n" << endl;
+	while (true) {
+		cout << "Registration Form:" << endl;
+		cout << "Username:";
+		cin >> usm;
+		cout << "Password";
+		cin >> pass;
+		if (pass.size() < 6) {
+			cout << "Your password has to be at least 6 characters long" << endl; // FEEL THE PAIN! 
+		} else if (!nav.Register(usm, pass)) {
+			cout << "Registration failed! Given username is not available." << endl;
+		} else {
+			cout << "Registration complete!" << endl;
+			cout << "Account created with: \n" <<
+				"Username: " << usm << "\n" <<
+				"Password: " << pass << endl;
+			break;
+		}
+	}
+	currentUser = nav.FindUserbyName(usm);
+	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
+	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // ONE LINER CODING FTW ! \\(* O *)//
+
+	return MainMenu(nav, currentUser);
+}
+
+bool WelcomeMenu(ForumManager & nav) {
+	User * currentUser = NULL;
+	string username, password;
+	cout << endl;
+	cout << "\t===========================\n\t||Welcome to D.I.T Lists!|| \n\t===========================\n\n"
+		<< "Please type in username and password \n";
+
+	do {
+		cout << "Username: ";
+		getline(cin, username);
+		cout << "Password: ";
+		getline(cin, password);
+
+		currentUser = nav.Validate(username, password);
+
+		if (password == "" && username == "") {
+			currentUser = new User("Guest", "", 0);
+		}
+
+		if (currentUser == NULL) {
+			cout << "Incorrect username or password. \n Please try again." << endl;
+		}
+	} while (currentUser == NULL);
+
+	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
+	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // WARNING: This line looks terrible at sub 23 inch displays
+
+	return MainMenu(nav, currentUser);
+
+}
 
 bool MainMenu(ForumManager & nav, User * user) {
 	cout << endl;
@@ -76,12 +136,18 @@ bool MainMenu(ForumManager & nav, User * user) {
 }
 
 bool UserMenu(ForumManager & nav, User * user) {
+	cout << endl;
+	if (user->GetRights() < 3) {
+		cout << "You are not allowed to access this menu" << endl;
+		return MainMenu(nav, user);
+	}
 	cout << "\n\nSelect: \n"
 		<< "C, to view Users Catalogue. \n"
 		<< "M, to Change Rights. \n"
 		<< "D, to Delete User. \n"
 		<< "U, to Change Username. \n"
 		<< "P, to Change Password. \n"
+		<< "H, to return to the Main Menu. \n"
 		<< "L, to Save current System and Exit. \n"
 		<< "X, to Exit without Saving. " << endl;
 	cout << "\n\n" << ">";
@@ -106,18 +172,23 @@ bool UserMenu(ForumManager & nav, User * user) {
 
 		if (user->GetRights() > 3 || user->GetRights() < 1) {
 			cout << "Invalid rights given" << endl;
-			return UserMenu(nav, user);
+		} else if (nav.ChangeUserRights(username, rights)) {
+			cout << "Rights updated" << endl;
 		} else {
-			nav.ChangeUserRights(username, rights);
-			return UserMenu(nav, user);
+			cout << "Invalid username given" << endl;
 		}
+		return UserMenu(nav, user);
 	}
 	case 'D':{
 		string username;
 		cout << "Enter username: ";
 		cin >> username;
 
-		nav.DeleteUser(username);
+		if (nav.DeleteUser(username)){
+			cout << "User deleted" << endl;
+		} else {
+			cout << "Invalid username" << endl;
+		}
 		return UserMenu(nav, user);
 	}
 		
@@ -129,9 +200,10 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cin >> new_username;
 
 		if (nav.RenameUser(curr_username, new_username)){
+			cout << "User renamed" << endl; 
 			return UserMenu(nav, user);
 		} else {
-			cout << "Invalid current username given" << endl;
+			cout << "Invalid new username given or user does not exist" << endl;
 			return UserMenu(nav, user);
 		}
 	}		
@@ -144,20 +216,21 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cin >> newcode;
 
 		if (nav.ChangeUserPassword(username, newcode)){
+			cout << "Password changed" << endl;
 			return UserMenu(nav, user);
 		} else {
 			cout << "Invalid username given" << endl;
 			return UserMenu(nav, user);
 		}
 	}		
-	case 'L':{
+	case 'H':
+		return MainMenu(nav, user);
+	case 'L':
 		cout << "Saving state and exiting..." << endl;
 		return true;
-	}		
-	case 'X':{
+	case 'X':
 		cout << "Exiting..." << endl;
 		return false;
-	}
 	default:
 		cout << "Invalid command given" << endl;
 		return UserMenu(nav, user);
@@ -176,8 +249,8 @@ bool ForumMenu(ForumManager & nav, User * user){
 	cout << "\n" << endl;
 
 	cout << "\n\nSelect: \n"
-		<< "F, Visit Forum. \n"
-		<< "T, to Visit Thread menu. \n"
+		<< "F, to Visit Forum. \n"
+		<< "T, to Visit Thread. \n"
 		<< "B, to go Back. \n"
 		<< "C, to Create Thread. \n"
 		<< "H, to Return to Main Menu. \n"
@@ -197,15 +270,17 @@ bool ForumMenu(ForumManager & nav, User * user){
 	cin.clear();
 	cin.sync();
 	cin >> selection;
+	cin.clear();
+	cin.sync();
 
 	switch (toupper(selection[0])){
 	case 'F': {
-				  int id;
+		int id;
 
-				  cin >> id;
-				  cout << "Enter forum ID" << endl;
-				  nav.VisitForum(id);
-				  return ForumMenu(nav, user);
+		cout << "Enter forum ID" << endl;
+		cin >> id;
+		nav.VisitForum(id);
+		return ForumMenu(nav, user);
 	}
 	case 'T':{
 		int id;
@@ -216,12 +291,14 @@ bool ForumMenu(ForumManager & nav, User * user){
 		return ThreadMenu(nav, user);
 	}		
 	case 'B':{
-		return MainMenu(nav, user);
+		nav.Back();
+		if (nav.GetCurrentForum() == NULL) {
+			return MainMenu(nav, user);
+		} else {
+			return ForumMenu(nav, user);
+		}
 	}
 	case 'C':{
-		cin.clear();
-		cin.sync();
-		
 		string title, content;
 
 		cout << "Enter title: ";
@@ -236,20 +313,17 @@ bool ForumMenu(ForumManager & nav, User * user){
 	case 'H':{
 		return MainMenu(nav, user);
 	}		
-	case 'L':{
-		return true;
-	}		
-	case 'X':{
+	case 'L':
+		cout << "Saving state and exiting..." << endl;
+		return true;	
+	case 'X':
+		cout << "Exiting..." << endl;
 		return false;
-	}		
 	case 'N':
 		if (user->GetRights() < 3){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			string title;
 
 			cout << "Enter title: ";
@@ -262,9 +336,6 @@ bool ForumMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			string title;
 
 			cout << "Enter title:";
@@ -277,9 +348,6 @@ bool ForumMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			int index;
 
 			cout << "Type ID of Forum to be deleted: ";
@@ -293,15 +361,14 @@ bool ForumMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			int id;
 			string path;
 
 			cout << "Type ID of Forum to be moved: ";
 			cin >> id;
 			cout << "Type path: ";
+			cin.clear();
+			cin.sync();
 			cin >> path;
 
 			vector<string> tokens = Split(path,'.');
@@ -322,6 +389,9 @@ bool ForumMenu(ForumManager & nav, User * user){
 }
 
 bool ThreadMenu(ForumManager & nav, User * user){
+	cout << endl;
+	nav.PrintContents();
+
 	cout << "\n\nSelect: \n"
 		<< "B, to go Back. \n"
 		<< "R, to Reply to a Post. \n"
@@ -345,18 +415,20 @@ bool ThreadMenu(ForumManager & nav, User * user){
 	cin.clear();
 	cin.sync();
 	cin >> selection;
+	cin.clear();
+	cin.sync();
 
 	switch (selection){
 	case 'B':
 		nav.Back();
 		break;
 	case 'R': {
-				  if (user->GetRights() < 1) break;
-				  string content;
-				  cin >> content;
-				  nav.GetMain()->LastPostID += 1;
-				  nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
-				  return ThreadMenu(nav, user);
+		if (user->GetRights() < 1) break;
+		string content;
+		cin >> content;
+		nav.GetMain()->LastPostID += 1;
+		nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
+		return ThreadMenu(nav, user);
 	}
 	case 'H':{
 		cout << "Returning to Main Menu" << endl;
@@ -386,9 +458,6 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			string path;
 
 			cout << "Type path: ";
@@ -412,9 +481,6 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			return MainMenu(nav, user);
 		}
 		else{
-			cin.clear();
-			cin.sync();
-
 			string name;
 
 			cout << "Type in name: ";
@@ -448,9 +514,6 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			int id;
 
 			cout << "Type in the ID of the Post to be deleted: ";
@@ -464,16 +527,14 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given " << endl;
 			return MainMenu(nav, user);
 		} else {
-			cin.clear();
-			cin.sync();
-
 			string path;
 			int id;
 
 			cout << "Type path: ";
 			cin >> path;
-
 			cout << "Type in the ID of the Post to be moved: ";
+			cin.clear();
+			cin.sync();
 			cin >> id;
 
 

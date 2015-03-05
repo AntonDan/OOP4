@@ -79,7 +79,7 @@ int Thread::GetID() const { return id; }
 
 string Thread::GetTitle() const { return title; }
 
-string Thread::GetUserName() const { return username; }
+string Thread::GetUsername() const { return username; }
 
 oList<Post> * Thread::GetPosts() { return (&posts); }
 
@@ -257,7 +257,7 @@ void Forum::SaveThreads(ofstream & threadFile, ofstream & postFile, string path)
 	for (int i = 0; i < threads.GetLength(); ++i) {
 		Thread * cThread = threads[i];
 		string tempath = path + "." + to_string(cThread->GetID()); // Update path
-		threadFile << tempath << " " << ((cThread->isSticky()) ? ("S") : ("N")) << " " << ((cThread->isLocked()) ? ("L") : ("N")) << " " << atoi(cThread->GetUserName().c_str()) << " " << cThread->GetTitle() << endl; // Save thread
+		threadFile << tempath << " " << ((cThread->isSticky()) ? ("S") : ("N")) << " " << ((cThread->isLocked()) ? ("L") : ("N")) << " " << atoi(cThread->GetUsername().c_str()) << " " << cThread->GetTitle() << endl; // Save thread
 		cThread->Save(postFile, tempath); // Save posts inside thread
 	}
 }

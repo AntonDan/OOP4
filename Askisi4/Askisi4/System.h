@@ -67,7 +67,7 @@ public:
 	// GETTERS
 	int GetID() const;
 	string GetTitle() const;
-	string GetUserName() const;
+	string GetUsername() const;
 	oList<Post> * GetPosts();
 	Post * GetPost(int) const;
 	Post * GetPostByID(int) const;

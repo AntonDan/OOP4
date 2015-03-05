@@ -6,27 +6,15 @@
 
 using namespace std;
 
-#pragma region Function
-
-User * Validate(string username, string password, oList<User> const & users) {
-	for (int i = 0; i < users.GetLength(); ++i) {
-		if (users[i]->GetUsername() == username) {
-			if (users[i]->GetPassword() == password) {
-				return users[i];
-			}
-		}
-	}
-	return NULL;
-}
-#pragma endregion
-
 #pragma region main
 int main(int argc, char * argv[] ) {
-	/* 1) Create main system 
+	/* 1) Create main system and user list
 	 * 2) Open to read database files
 	 * 3) Declare needed variables
 	 */
 	System mainSystem;
+	oList<User> users;
+
 	/*
 	ifstream iforumfile ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
@@ -42,6 +30,18 @@ int main(int argc, char * argv[] ) {
 	Forum * tempForum = NULL;
 	int ID;
 	unsigned int i = 0;
+
+	ForumManager fma(&mainSystem, &users);
+
+#pragma region User Creator
+	string username, password;
+	int id, rights;
+
+	while (getline(iuserfile, line)){
+		Parse(line, "I S S I", false, ' ', 4, &id, &username, &password, &rights); // Parse: Integer String String Integer (id , username , password and user rights)
+		users.Add(new User(id, username, password, rights)); // Create User and add him to the list
+	}
+#pragma endregion
 
 #pragma region Forum creator
 	/* Parsing forum file and creating forums */
@@ -72,9 +72,7 @@ int main(int argc, char * argv[] ) {
 		for (i = 1; i < vpath.size() - 1; ++i) {
 			tempForum = tempForum->GetForum(atoi(vpath[i].c_str()));
 		}
-		// Create Thread
-		// Find username based by ID
-		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name , to_string(ID) , ((sticky=='S') + (locked=='L')*2) );
+		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name, (fma.IDtoUser(ID) != NULL) ? (fma.IDtoUser(ID)->GetUsername()):("Unknown"), ((sticky == 'S') + (locked == 'L') * 2));		// Create Thread 
 	}
 #pragma endregion
 
@@ -91,74 +89,16 @@ int main(int argc, char * argv[] ) {
 		}
 		/* Navigate to parent thread */
 		Thread * tempThread = tempForum->GetThreadByID(atoi(vpath[i++].c_str()));
-		tempThread->CreatePost(atoi(vpath[i].c_str()) , to_string(ID), content ); // Create post
+		tempThread->CreatePost(atoi(vpath[i].c_str()), (fma.IDtoUser(ID) != NULL) ? (fma.IDtoUser(ID)->GetUsername()) : ("Unknown"), content); // Create post
 	}
 #pragma endregion
 
-#pragma region User Creator
-	oList<User> users;
-	string username, password;
-	int id, rights;
-
-	while (getline(iuserfile, line)){
-		Parse(line, "I S S I", false, ' ',  4, &id, &username, &password, &rights);
-		users.Add(new User(id, username, password, rights));
-	}
-#pragma endregion
-
-	ForumManager fma(&mainSystem, &users);
 
 	if (argc > 1) {
 		if (argv[1] = "-R") {
-			string usm, pass;
-			while(true) {
-				cout << "Registration Form:" << endl;
-				cout << "Username:";
-				cin >> usm;
-				cout << "Password";
-				cin >> password;
-				if (password.size() < 6) {
-					cout << "Your password has to be at least 6 characters long" << endl; // FEEL THE PAIN! 
-				} else if (!fma.Register(usm,pass)) {
-					cout << "Registration failed! Given username is not available." << endl;
-				} else {
-					cout << "Registration complete!" << endl;
-					cout << "Account created with: \n" <<
-						"Username: " << usm << "\n" <<
-						"Password: " << pass << endl;
-					break;
-				}
-			}
-
+			if (!RegistrationMenu(fma)) return 0;
 		}
-	}
-
-	User * currentUser = NULL;
-
-	cout << "\t===========================\n\t||Welcome to D.I.T Lists!|| \n\t===========================\n\n"
-		<< "Please type in username and password \n";
-	do {
-		cout << "Username: ";
-		getline(cin, username);
-		cout << "Password: ";
-		getline(cin, password);
-
-		currentUser = Validate(username, password, users);
-
-		if (password == "" && username == "") {
-			currentUser = new User("Guest", "", 0);
-		}
-
-		if (currentUser == NULL) {
-			cout << "Incorrect username or password. \n Please try again." << endl;
-		}
-	} while (currentUser == NULL);
-
-	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
-	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // ONE LINER CODING FTW ! \\(* O *)//
-
-	
-	if (!MainMenu(fma, currentUser)) return 0;
+	} else if (!WelcomeMenu(fma)) return 0;
 
 	/* close input files */
 	iforumfile.close();

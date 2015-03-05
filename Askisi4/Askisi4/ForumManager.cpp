@@ -20,6 +20,39 @@ Forum * ForumManager::GetCurrentForum() const { return currentForum; }
 Thread * ForumManager::GetCurrentThread() const { return currentThread; }
 
 // METHODS
+// GENERAL
+User * ForumManager::Validate(string username, string password) {
+	for (int i = 0; i < users->GetLength(); ++i) {
+		if ((*users)[i]->GetUsername() == username) {
+			if ((*users)[i]->GetPassword() == password) {
+				return (*users)[i];
+			}
+		}
+	}
+	return NULL;
+}
+
+User * ForumManager::IDtoUser(int id) {
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetId() == id) return (*users)[i];
+	}
+	return NULL;
+}
+
+User * ForumManager::FindUserbyName(string username) {
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == username) return (*users)[i];
+	}
+	return NULL;
+}
+
+int ForumManager::UsertoID(string username) {
+	for (int i = 0; i < users->GetLength(); ++i){
+		if ((*users)[i]->GetUsername() == username) return (*users)[i]->GetId();
+	}
+	return -1;
+}
+
 // VISITOR
 void ForumManager::VisitForum(int index) {
 	/* If we are not inside a forum visit a System subforum
@@ -56,7 +89,7 @@ void ForumManager::Back() {
 void ForumManager::PrintCurrent() const {
 	/* Print suitable data depending on were we are (inside a thread , a forum or a the main System) */
 	if (currentThread != NULL) {
-		cout << "Thread: " << currentThread->GetTitle() << "  by: " << currentThread->GetUserName() << endl;
+		cout << "Thread: " << currentThread->GetTitle() << "  by: " << currentThread->GetUsername() << endl;
 	} else if (currentForum != NULL) {
 		cout << "Forum: " << currentForum->GetTitle() << endl;
 	} else {
@@ -85,7 +118,7 @@ void ForumManager::PrintContents(int type) {
 		if (type > 0) {
 			oList<Thread> * threads = currentForum->GetThreads();
 			for (int i = 0; i < threads->GetLength(); ++i) {
-				cout << "Thread " << i + 1 << ": " << (*threads)[i]->GetTitle() << "  by: " << "  [ID: " << (*threads)[i]->GetID() << "] " << endl;
+				cout << "Thread " << i + 1 << ": " << (*threads)[i]->GetTitle() << "  by: " << (*threads)[i]->GetUsername() << "  [ID: " << (*threads)[i]->GetID() << "] " << endl;
 			}
 		}
 	} else {
@@ -105,7 +138,7 @@ void ForumManager::PrintContent(int index) const {
 		cout << "Post: " << index + 1 << ": " << "User: " << currentThread->GetPost(index)->GetUser() << "  content: " << currentThread->GetPost(index)->GetContent() << endl;
 	} else if (currentForum != NULL) {
 		if (currentForum->GetForum(index) != NULL) 	cout << "Forum " << index + 1 << ": " << currentForum->GetForum(index)->GetTitle() << endl;
-		if (currentForum->GetThread(index) != NULL) cout << "Thread " << index + 1 << ": " << currentForum->GetThread(index)->GetTitle() << "  by: " << currentForum->GetThread(index)->GetUserName() << endl;
+		if (currentForum->GetThread(index) != NULL) cout << "Thread " << index + 1 << ": " << currentForum->GetThread(index)->GetTitle() << "  by: " << currentForum->GetThread(index)->GetUsername() << endl;
 	} else {
 		cout << main->GetTitle() << endl;
 	}
@@ -133,7 +166,6 @@ void ForumManager::CreatePost(Thread * thread, int PID, string username, string 
 	/* Create a post with given data */
 	thread->CreatePost(PID, username, content);
 }
-
 
 // MODERATOR
 void ForumManager::DeleteThread(Thread * thread) {
@@ -202,21 +234,25 @@ void ForumManager::PrintUsers() const {
 	}
 }
 
-void ForumManager::ChangeUserRights(string username , int rights) {
+bool ForumManager::ChangeUserRights(string username , int rights) {
 	for (int i = 0; i < users->GetLength(); ++i){
 		if ((*users)[i]->GetUsername() == username){
 			(*users)[i]->SetRights(rights);
+			return true;
 		}
 	}
+	return false;
 }
 
-void ForumManager::DeleteUser(string username) {
+bool ForumManager::DeleteUser(string username) {
 	/* Searching the user list until the given username is found, then deleting it */
 	for (int i = 0; i < users->GetLength(); ++i){
 		if ((*users)[i]->GetUsername() == username){
 			delete users->Delete(i);
+			return true;
 		}
 	}
+	return false;
 }
 
 bool ForumManager::RenameUser(string username, string newname) {
@@ -238,7 +274,7 @@ bool ForumManager::ChangeUserPassword(string username, string code) {				// user
 	/* Searching the user list until the given username is found, then assign the new password it */
 	for (int i = 0; i < users->GetLength(); ++i){
 		if ((*users)[i]->GetUsername() == username){
-			(*users)[i]->SetUsername(code);
+			(*users)[i]->SetPassword(code);
 			return true;
 		}
 	}

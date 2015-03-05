@@ -23,6 +23,14 @@ public:
 
 	// METHODS 
 	/* so tidy , much OCD , wow */
+	User * Validate(string, string);
+
+	User * IDtoUser(int);
+
+	User * FindUserbyName(string);
+
+	int UsertoID(string);
+
 	void VisitForum(int);
 
 	void VisitForum(Forum *);
@@ -67,9 +75,9 @@ public:
 
 	void PrintUsers() const;
 
-	void ChangeUserRights(string, int);
+	bool ChangeUserRights(string, int);
 
-	void DeleteUser(string);
+	bool DeleteUser(string);
 
 	bool RenameUser(string, string);
 

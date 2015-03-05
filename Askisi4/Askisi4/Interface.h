@@ -9,7 +9,9 @@
 #include "ForumManager.h"
 #include "Functions.h"
 
-string Trim(string &);
+bool RegistrationMenu(ForumManager & nav);
+
+bool WelcomeMenu(ForumManager & nav);
 
 bool MainMenu(ForumManager &, User *);
 
