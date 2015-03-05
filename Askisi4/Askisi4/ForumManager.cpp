@@ -216,8 +216,8 @@ void ForumManager::CreateForum(SF * destination, string title) {
 	destination->CreateForum(title);
 }
 
-void ForumManager::DeleteForum(SF * forum, int index) {
-	forum->DeleteForum(index);
+void ForumManager::DeleteForum(Forum * forum) {
+	(forum->GetParent())->DeleteForum(forum);
 }
 
 void ForumManager::MoveForum(Forum * forum, SF * destination) {

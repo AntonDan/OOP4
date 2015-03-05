@@ -68,7 +68,7 @@ public:
 
 	void CreateForum(SF *, string);
 
-	void DeleteForum(SF *, int);
+	void DeleteForum(Forum *);
 
 	void MoveForum(Forum *, SF *);
 

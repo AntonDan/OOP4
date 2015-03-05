@@ -155,7 +155,15 @@ Forum * SF::CreateForum(string title) {
 
 void SF::DeleteForum(int index) {
 	/* Making sure forum exists before deleting it (not necessary but just in case) */
-	Forum * temp = forums.Delete(index);
+	Forum * temp = forums.Delete(index-1);
+	if (temp != NULL) {
+		delete temp;
+	}
+}
+
+void SF::DeleteForum(Forum * forum) {
+	/* Making sure forum exists before deleting it (not necessary but just in case) */
+	Forum * temp = forums.Delete(forum);
 	if (temp != NULL) {
 		delete temp;
 	}

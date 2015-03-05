@@ -357,13 +357,19 @@ bool ForumMenu(ForumManager & nav, User * user){
 			cout << "Invalid command given" << endl;
 			return ForumMenu(nav, user);
 		} else {
-			int index;
+			cout << "Deleting current Forum ";
 
-			cout << "Type ID of Forum to be deleted: ";
-			cin >> index;
-			nav.DeleteForum(nav.GetCurrentForum(), index);
+			Forum * tempForum = nav.GetCurrentForum();
+			
+			nav.Back();
+			nav.DeleteForum(tempForum);
 
-			return ForumMenu(nav, user);
+			if (nav.GetCurrentForum() == NULL){
+				return MainMenu(nav, user);
+			}
+			else{
+				return ForumMenu(nav, user);
+			}
 		}
 	case 'M':
 		if (user->GetRights() < 3){

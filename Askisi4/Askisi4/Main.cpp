@@ -15,17 +15,18 @@ int main(int argc, char * argv[] ) {
 	System mainSystem;
 	oList<User> users;
 
-	/*
+	
 	ifstream iforumfile ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ifstream ipostfile  ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 	ifstream iuserfile  ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
-	*/
+	
+	/*
 	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
 	ifstream iuserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
-
+	*/
 	string line , path , name;
 	Forum * tempForum = NULL;
 	int ID;
@@ -107,17 +108,19 @@ int main(int argc, char * argv[] ) {
 	iuserfile.close();
 
 	/* Open files for writting */
-	/*	
+	
 	ofstream oforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ofstream othreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ofstream opostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 	ofstream ouserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
-	*/
+	
+	/*
 	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
 	ofstream ouserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
 	fma.Save(oforumfile, othreadfile, opostfile, ouserfile);
+	*/
 
 	/* close output files */
 	oforumfile.close();
