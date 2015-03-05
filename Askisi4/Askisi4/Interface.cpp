@@ -9,11 +9,14 @@ bool RegistrationMenu(ForumManager & nav) {
 	string usm, pass;
 	cout << endl;
 	cout << "\t===========================\n\t||Welcome to D.I.T Lists!|| \n\t===========================\n\n" << endl;
+
 	while (true) {
 		cout << "Registration Form:" << endl;
 		cout << "Username:";
 		cin >> usm;
 		cout << "Password";
+		cin.clear();
+		cin.sync();
 		cin >> pass;
 		if (pass.size() < 6) {
 			cout << "Your password has to be at least 6 characters long" << endl; // FEEL THE PAIN! 
@@ -152,12 +155,14 @@ bool UserMenu(ForumManager & nav, User * user) {
 		<< "X, to Exit without Saving. " << endl;
 	cout << "\n\n" << ">";
 
-	string selection;
+	char selection;
 	cin.clear();
 	cin.sync();
 	cin >> selection;
+	cin.clear();
+	cin.sync();
 
-	switch (toupper(selection[0])){
+	switch (toupper(selection)){
 	case 'C':
 		nav.PrintUsers();
 		return UserMenu(nav, user);
@@ -168,6 +173,8 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cout << "Enter username: ";
 		cin >> username;
 		cout << "\nEnter rights: ";
+		cin.clear();
+		cin.sync();
 		cin >> rights;
 
 		if (user->GetRights() > 3 || user->GetRights() < 1) {
@@ -197,15 +204,16 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cout << "Enter current username: ";
 		cin >> curr_username;
 		cout << "Enter new username: ";
+		cin.clear();
+		cin.sync();
 		cin >> new_username;
 
 		if (nav.RenameUser(curr_username, new_username)){
 			cout << "User renamed" << endl; 
-			return UserMenu(nav, user);
 		} else {
 			cout << "Invalid new username given or user does not exist" << endl;
-			return UserMenu(nav, user);
 		}
+		return UserMenu(nav, user);
 	}		
 	case 'P':{
 		string username;
@@ -213,15 +221,16 @@ bool UserMenu(ForumManager & nav, User * user) {
 		cout << "Enter  username: ";
 		cin >> username;
 		cout << "Enter new upassword: ";
+		cin.clear();
+		cin.sync();
 		cin >> newcode;
 
 		if (nav.ChangeUserPassword(username, newcode)){
 			cout << "Password changed" << endl;
-			return UserMenu(nav, user);
 		} else {
 			cout << "Invalid username given" << endl;
-			return UserMenu(nav, user);
 		}
+		return UserMenu(nav, user);
 	}		
 	case 'H':
 		return MainMenu(nav, user);
@@ -266,14 +275,14 @@ bool ForumMenu(ForumManager & nav, User * user){
 
 	cout << "\n\n" << ">";
 
-	string selection;
+	char selection;
 	cin.clear();
 	cin.sync();
 	cin >> selection;
 	cin.clear();
 	cin.sync();
 
-	switch (toupper(selection[0])){
+	switch (toupper(selection)){
 	case 'F': {
 		int id;
 
@@ -418,16 +427,18 @@ bool ThreadMenu(ForumManager & nav, User * user){
 	cin.clear();
 	cin.sync();
 
-	switch (selection){
+	switch (toupper(selection)){
 	case 'B':
 		nav.Back();
-		break;
+		return ForumMenu(nav, user);
 	case 'R': {
-		if (user->GetRights() < 1) break;
-		string content;
-		cin >> content;
-		nav.GetMain()->LastPostID += 1;
-		nav.CreatePost(nav.GetCurrentThread(), nav.GetMain()->LastPostID, user->GetUsername(), content);
+		if (user->GetRights() < 1) {
+			cout << "You need to be a user to create a post" << endl;
+		} else {
+			string content;
+			cin >> content;
+			nav.CreatePost(nav.GetCurrentThread(), user->GetUsername(), content);
+		}
 		return ThreadMenu(nav, user);
 	}
 	case 'H':{
@@ -444,19 +455,19 @@ bool ThreadMenu(ForumManager & nav, User * user){
 	}		
 	case 'D':{
 		if (user->GetRights() < 2) {
-			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
+			cout << "Invalid command given" << endl;
+			return ThreadMenu(nav, user);
 		} else {
 			Thread * temp = nav.GetCurrentThread();
 			nav.Back();
 			nav.DeleteThread(temp);
-			return ThreadMenu(nav, user);
+			return ForumMenu(nav, user);
 		}
 	}
 	case 'M':{
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
+			return ThreadMenu(nav, user);
 		} else {
 			string path;
 
@@ -478,54 +489,46 @@ bool ThreadMenu(ForumManager & nav, User * user){
 	case 'E':{
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
-		}
-		else{
+		} else {
 			string name;
-
-			cout << "Type in name: ";
+			cout << "Enter new thread name: ";
 			getline(cin, name);
 			nav.RenameThread(nav.GetCurrentThread(), name);
-			return ThreadMenu(nav, user);
 		}
+		return ThreadMenu(nav, user);
 	}
 	case 'Y':{
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
 		} else {
 			nav.ChangeSticky(nav.GetCurrentThread());
-			cout << "Thread is set sticky" << endl;
-			return ThreadMenu(nav, user);
+			cout << "Thread is set to " << ((nav.GetCurrentThread()->isSticky())? (""):("not")) << " sticky" << endl;
 		}
+		return ThreadMenu(nav, user);
 	}
 	case 'K':{
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
 		} else {
 			nav.ChangeLocked(nav.GetCurrentThread());
-			cout << "Thread is set locked " << endl;
-			return ThreadMenu(nav, user);
+			cout << "Thread is set to " << ((nav.GetCurrentThread()->isLocked()) ? ("") : ("not")) << " locked" << endl;
 		}
+		return ThreadMenu(nav, user);
 	}
 	case 'A':{
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
 		} else {
 			int id;
-
-			cout << "Type in the ID of the Post to be deleted: ";
+			cout << "Enter  in the ID of the Post to be deleted: ";
 			cin >> id;
 			nav.DeletePost(nav.GetCurrentThread()->GetPostByID(id));
-			return ThreadMenu(nav, user);
 		}
+		return ThreadMenu(nav, user);
 	}
 	case 'S':{
 		if (user->GetRights() < 2) {
 			cout << "Invalid command given " << endl;
-			return MainMenu(nav, user);
 		} else {
 			string path;
 			int id;
@@ -536,8 +539,7 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			cin.clear();
 			cin.sync();
 			cin >> id;
-
-
+			
 			vector<string> tokens = Split(path, '.');
 			Forum * tempForum = nav.GetMain()->GetForum((atoi(tokens[0].c_str())));
 			for (unsigned int i = 1; i < tokens.size() - 1; ++i){
@@ -547,8 +549,8 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			Post * temp = nav.GetCurrentThread()->GetPost(id);
 			nav.Back();
 			nav.MovePost(temp, tempThread);
-			return ThreadMenu(nav, user);
 		}
+		return ThreadMenu(nav, user);
 	}		
 	default:
 		cout << "Invalid command given" << endl;

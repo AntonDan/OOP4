@@ -81,8 +81,12 @@ void ForumManager::Back() {
 		currentForum = NULL;
 		currentThread = NULL;
 	} else {
-		currentThread = NULL;
-		currentForum = (Forum *)currentForum->GetParent(); // type conversion in this case is considered safe since we made sure that cForums parent is not the System
+		if (currentThread != NULL) {
+			currentForum = (Forum *)currentThread->GetParent(); // type conversion in this case is considered safe since we made sure that cForums parent is not the System
+			currentThread = NULL;
+		} else {
+			currentForum = (Forum *)currentForum->GetParent(); // type conversion in this case is considered safe since we made sure that cForums parent is not the System
+		}
 	}
 }
 
@@ -162,9 +166,10 @@ void ForumManager::CreateThread(Forum * forum, string title, string username, st
 	(forum->CreateThread(main->LastThreadID, title, username))->CreatePost(main->LastPostID, username, content);
 }
 
-void ForumManager::CreatePost(Thread * thread, int PID, string username, string content) {
+void ForumManager::CreatePost(Thread * thread, string username, string content) {
 	/* Create a post with given data */
-	thread->CreatePost(PID, username, content);
+	main->LastPostID += 1;
+	thread->CreatePost(main->LastPostID, username, content);
 }
 
 // MODERATOR

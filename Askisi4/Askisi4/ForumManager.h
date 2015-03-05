@@ -1,9 +1,10 @@
 #ifndef FM_INCLUDE_GUARD
 #define FM_INCLUDE_GUARD
-#pragma region Forum Navigator
 
 #include "System.h"
 #include "Users.h"
+
+#pragma region Forum Navigator
 
 class ForumManager {
 private:
@@ -49,7 +50,7 @@ public:
 
 	void CreateThread(Forum *, string, string, string);
 
-	void CreatePost(Thread *, int, string, string);
+	void CreatePost(Thread *, string, string);
 
 	void DeleteThread(Thread *);
 
@@ -90,6 +91,6 @@ public:
 	void SaveUsers(ofstream &);
 
 };
-
 #pragma endregion
+
 #endif

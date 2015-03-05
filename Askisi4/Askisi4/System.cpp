@@ -1,7 +1,4 @@
 #include "stdafx.h"
-#include <iostream>
-#include <cstdlib>
-#include <string>
 #include "System.h"
 
 #pragma region Post
