@@ -15,18 +15,18 @@ int main(int argc, char * argv[] ) {
 	System mainSystem;
 	oList<User> users;
 
-	
+	/*
 	ifstream iforumfile ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ifstream ipostfile  ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 	ifstream iuserfile  ("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
+	*/
 	
-	/*
 	ifstream iforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ifstream ithreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ifstream ipostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
 	ifstream iuserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
-	*/
+	
 	string line , path , name;
 	Forum * tempForum = NULL;
 	int ID;
@@ -73,7 +73,7 @@ int main(int argc, char * argv[] ) {
 		for (i = 1; i < vpath.size() - 1; ++i) {
 			tempForum = tempForum->GetForum(atoi(vpath[i].c_str()));
 		}
-		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name, (fma.IDtoUser(ID) != NULL) ? (fma.IDtoUser(ID)->GetUsername()):("Unknown"), ((sticky == 'S') + (locked == 'L') * 2));		// Create Thread 
+		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name, ID, ((sticky == 'S') + (locked == 'L') * 2));		// Create Thread 
 	}
 #pragma endregion
 
@@ -90,7 +90,7 @@ int main(int argc, char * argv[] ) {
 		}
 		/* Navigate to parent thread */
 		Thread * tempThread = tempForum->GetThreadByID(atoi(vpath[i++].c_str()));
-		tempThread->CreatePost(atoi(vpath[i].c_str()), (fma.IDtoUser(ID) != NULL) ? (fma.IDtoUser(ID)->GetUsername()) : ("Unknown"), content); // Create post
+		tempThread->CreatePost(atoi(vpath[i].c_str()), ID, content); // Create post
 	}
 #pragma endregion
 
@@ -108,18 +108,18 @@ int main(int argc, char * argv[] ) {
 	iuserfile.close();
 
 	/* Open files for writting */
-	
+	/*
 	ofstream oforumfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/forum.txt");
 	ofstream othreadfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ofstream opostfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/post.txt");
 	ofstream ouserfile("C:/Users/Mertiko/Desktop/OOP4/Askisi4/Debug/Databases/user.txt");
-	
-	/*
-	ofstream oforumfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/forum.txt");
-	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
-	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
-	ofstream ouserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
 	*/
+	
+	ofstream oforumfile("c:/users/antonis/desktop/oop4/oop4/askisi4/debug/databases/forum.txt");
+	ofstream othreadfile("c:/users/antonis/desktop/oop4/oop4/askisi4/debug/databases/thread.txt");
+	ofstream opostfile("c:/users/antonis/desktop/oop4/oop4/askisi4/debug/databases/post.txt");
+	ofstream ouserfile("c:/users/antonis/desktop/oop4/oop4/askisi4/debug/databases/user.txt");
+	
 
 	fma.Save(oforumfile, othreadfile, opostfile, ouserfile);
 	

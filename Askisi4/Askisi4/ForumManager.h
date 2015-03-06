@@ -26,7 +26,7 @@ public:
 	/* so tidy , much OCD , wow */
 	User * Validate(string, string);
 
-	User * IDtoUser(int);
+	string IDtoUser(int) const;
 
 	User * FindUserbyName(string);
 

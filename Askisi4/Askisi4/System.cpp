@@ -4,18 +4,14 @@
 #pragma region Post
 
 // CONSTRUCTOR
-Post::Post(int id, string user, string con, Thread * parent ) {
+Post::Post(int id, int user, string con, Thread * parent ) {
 	this->id = id;
-	username = user;
+	userid = user;
 	content = con;
 	this->parent = parent;
 }
 
 // SETTERS
-void Post::SetUser(string user) {
-	username = user;
-}
-
 void Post::SetContent(string con) {
 	content = con;
 }
@@ -27,8 +23,8 @@ void Post::SetParent(Thread * parent){
 // GETTERS
 int Post::GetID() const { return id; }
 
-string Post::GetUser() const {
-	return username;
+int Post::GetUserID() const {
+	return userid;
 }
 
 string Post::GetContent() const {
@@ -39,7 +35,7 @@ Thread * Post::GetParent() const{ return parent; }
 
 // DESTRUCTOR
 Post::~Post() {
-	username = "";
+	userid = -1;
 	content = "";
 }
 
@@ -48,10 +44,10 @@ Post::~Post() {
 #pragma region Thread
 
 // CONSTRUCTORS
-Thread::Thread(int id ,string title, string user , Forum * parent , int info ) {
+Thread::Thread(int id ,string title, int user , Forum * parent , int info ) {
 	this->id = id;
 	this->title = title;
-	username = user;
+	userid = user;
 	/* info = 0 : sticky = false - locked = false 
 	 * info = 1 : sticky = true  - locked = false 
 	 * info = 2 : sticky = false - locked = true 
@@ -76,7 +72,7 @@ int Thread::GetID() const { return id; }
 
 string Thread::GetTitle() const { return title; }
 
-string Thread::GetUsername() const { return username; }
+int Thread::GetUserID() const { return userid; }
 
 oList<Post> * Thread::GetPosts() { return (&posts); }
 
@@ -98,7 +94,7 @@ bool Thread::isSticky() const { return sticky; }
 bool Thread::isLocked() const { return locked; }
 
 // METHODS
-void Thread::CreatePost(int id, string user, string content) {
+void Thread::CreatePost(int id, int user, string content) {
 	/* Pass this (pointer to this Thread) as the posts parent */
 	posts.Add(new Post(id, user, content, this));
 }
@@ -125,7 +121,7 @@ void Thread::Save(ofstream & postFile, string path) {
 	/* Get a list of the posts inside the thread and save their contents/data  */
 	for (int i = 0; i < posts.GetLength(); ++i) {
 		Post * cPost = posts[i];
-		postFile << path + "." << cPost->GetID() << " " << atoi(cPost->GetUser().c_str()) << " " << cPost->GetContent() << endl;
+		postFile << path + "." << cPost->GetID() << " " << cPost->GetUserID() << " " << cPost->GetContent() << endl;
 	}
 }
 
@@ -133,7 +129,7 @@ void Thread::Save(ofstream & postFile, string path) {
 Thread::~Thread() {
 	/* This destructor is unecessary and can be removed */
 	title = "";
-	username = "";
+	userid = -1;
 }
 
 #pragma endregion
@@ -210,9 +206,9 @@ oList<Thread> * Forum::GetThreads() { return &threads; } // Cannot be a constant
 SF * Forum::GetParent() const { return parent; }
 
 // METHODS
-Thread * Forum::CreateThread(int id, string title, string username, int info) {
+Thread * Forum::CreateThread(int id, string title, int userid, int info) {
 	/* Thread is stored into a temporary variable so it can be returned after added in the list */
-	Thread * newthread = new Thread(id, title, username, this, info);
+	Thread * newthread = new Thread(id, title, userid, this, info);
 	threads.Add(newthread);
 	return newthread;
 }
@@ -262,7 +258,7 @@ void Forum::SaveThreads(ofstream & threadFile, ofstream & postFile, string path)
 	for (int i = 0; i < threads.GetLength(); ++i) {
 		Thread * cThread = threads[i];
 		string tempath = path + "." + to_string(cThread->GetID()); // Update path
-		threadFile << tempath << " " << ((cThread->isSticky()) ? ("S") : ("N")) << " " << ((cThread->isLocked()) ? ("L") : ("N")) << " " << atoi(cThread->GetUsername().c_str()) << " " << cThread->GetTitle() << endl; // Save thread
+		threadFile << tempath << " " << ((cThread->isSticky()) ? ("S") : ("N")) << " " << ((cThread->isLocked()) ? ("L") : ("N")) << " " << cThread->GetUserID() << " " << cThread->GetTitle() << endl; // Save thread
 		cThread->Save(postFile, tempath); // Save posts inside thread
 	}
 }

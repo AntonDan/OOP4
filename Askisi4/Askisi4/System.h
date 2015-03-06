@@ -23,18 +23,17 @@ class SF;
 class Post {
 private:
 	int id;
-	string username;
+	int userid;
 	string content;
 
 	Thread * parent;
 
 public:
-	Post(int, string , string , Thread *);
-	void SetUser(string );
+	Post(int, int , string , Thread *);
 	void SetContent(string );
 	void Post::SetParent(Thread *);
 	int GetID() const;
-	string GetUser() const;
+	int GetUserID() const;
 	string GetContent() const;
 	Thread * GetParent() const;
 	~Post();
@@ -46,7 +45,7 @@ class Thread {
 private:
 	int id;
 	string title;
-	string username;
+	int userid;
 	oList<Post> posts;
 
 	bool sticky;
@@ -56,7 +55,7 @@ private:
 
 public:
 	// CONSTRUCTORS
-	Thread(int, string, string, Forum * , int = 0);
+	Thread(int, string, int, Forum * , int = 0);
 
 	// SETTERS 
 	void SetTitle(string);
@@ -67,7 +66,7 @@ public:
 	// GETTERS
 	int GetID() const;
 	string GetTitle() const;
-	string GetUsername() const;
+	int GetUserID() const;
 	oList<Post> * GetPosts();
 	Post * GetPost(int) const;
 	Post * GetPostByID(int) const;
@@ -76,8 +75,8 @@ public:
 	bool isLocked() const;
 
 	// METHODS
-	void CreatePost(int, string , string);
-	void DeletePost(int index);
+	void CreatePost(int, int , string);
+	void DeletePost(int);
 	void DeletePost(Post *);
 	Post * RemovePost(Post *);
 	void AddPost(Post *);
@@ -131,7 +130,7 @@ public:
 	oList<Thread> * GetThreads();
 
 	// METHODS
-	Thread * CreateThread(int, string , string , int = 0);
+	Thread * CreateThread(int, string , int , int = 0);
 	void DeleteThread(int);
 	void DeleteThread(Thread *);
 	Thread * RemoveThread(Thread *);

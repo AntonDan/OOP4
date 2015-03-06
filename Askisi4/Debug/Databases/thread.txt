@@ -1,6 +1,6 @@
-1.2.2 N N 0 Do they get paid?
-1.1 N N 0 Is it hard to make a program?
-2.3 N N 0 What is a class?
-3.4 N N 0 Do i need inline funcs?
-4.5 N N 0 C#
-4.6 N N 0 Java
+1.2.2 N N 1 Do they get paid?
+1.1 N N 2 Is it hard to make a program?
+2.3 N N 3 What is a class?
+3.4 N N 1 Do i need inline funcs?
+4.5 N N 2 C#
+4.6 N N 3 Java

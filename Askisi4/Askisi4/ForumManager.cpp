@@ -32,11 +32,11 @@ User * ForumManager::Validate(string username, string password) {
 	return NULL;
 }
 
-User * ForumManager::IDtoUser(int id) {
+string  ForumManager::IDtoUser(int id) const {
 	for (int i = 0; i < users->GetLength(); ++i){
-		if ((*users)[i]->GetId() == id) return (*users)[i];
+		if ((*users)[i]->GetId() == id) return (*users)[i]->GetUsername();
 	}
-	return NULL;
+	return "Unknown";
 }
 
 User * ForumManager::FindUserbyName(string username) {
@@ -93,7 +93,7 @@ void ForumManager::Back() {
 void ForumManager::PrintCurrent() const {
 	/* Print suitable data depending on were we are (inside a thread , a forum or a the main System) */
 	if (currentThread != NULL) {
-		cout << "Thread: " << currentThread->GetTitle() << "  by: " << currentThread->GetUsername() << endl;
+		cout << "Thread: " << currentThread->GetTitle() << "  by: " << IDtoUser((int)currentThread->GetUserID()) << endl;
 	} else if (currentForum != NULL) {
 		cout << "Forum: " << currentForum->GetTitle() << endl;
 	} else {
@@ -109,7 +109,7 @@ void ForumManager::PrintContents(int type) {
 	if (currentThread != NULL) {
 		oList<Post> * posts = currentThread->GetPosts();
 		for (int i = 0; i < posts->GetLength(); ++i) {
-			cout << "User: " << (*posts)[i]->GetUser() << "  content: " << (*posts)[i]->GetContent() << "  [ID: " << (*posts)[i]->GetID() << "] " << endl;
+			cout << "User: " << IDtoUser((*posts)[i]->GetUserID()) << "  content: " << (*posts)[i]->GetContent() << "  [ID: " << (*posts)[i]->GetID() << "] " << endl;
 		}
 	} else if (currentForum != NULL) {
 		if (type % 2 == 0) {
@@ -122,7 +122,7 @@ void ForumManager::PrintContents(int type) {
 		if (type > 0) {
 			oList<Thread> * threads = currentForum->GetThreads();
 			for (int i = 0; i < threads->GetLength(); ++i) {
-				cout << "Thread " << i + 1 << ": " << (*threads)[i]->GetTitle() << "  by: " << (*threads)[i]->GetUsername() << "  [ID: " << (*threads)[i]->GetID() << "] " << endl;
+				cout << "Thread " << i + 1 << ": " << (*threads)[i]->GetTitle() << "  by: " << IDtoUser((*threads)[i]->GetUserID()) << "  [ID: " << (*threads)[i]->GetID() << "] " << endl;
 			}
 		}
 	} else {
@@ -139,10 +139,10 @@ void ForumManager::PrintContent(int index) const {
 	* If we are under the system print the data of the main forum
 	*/
 	if (currentThread != NULL) {
-		cout << "Post: " << index + 1 << ": " << "User: " << currentThread->GetPost(index)->GetUser() << "  content: " << currentThread->GetPost(index)->GetContent() << endl;
+		cout << "Post: " << index + 1 << ": " << "User: " << IDtoUser(currentThread->GetPost(index)->GetUserID()) << "  content: " << currentThread->GetPost(index)->GetContent() << endl;
 	} else if (currentForum != NULL) {
 		if (currentForum->GetForum(index) != NULL) 	cout << "Forum " << index + 1 << ": " << currentForum->GetForum(index)->GetTitle() << endl;
-		if (currentForum->GetThread(index) != NULL) cout << "Thread " << index + 1 << ": " << currentForum->GetThread(index)->GetTitle() << "  by: " << currentForum->GetThread(index)->GetUsername() << endl;
+		if (currentForum->GetThread(index) != NULL) cout << "Thread " << index + 1 << ": " << currentForum->GetThread(index)->GetTitle() << "  by: " << IDtoUser(currentForum->GetThread(index)->GetUserID()) << endl;
 	} else {
 		cout << main->GetTitle() << endl;
 	}
@@ -163,13 +163,13 @@ void ForumManager::CreateThread(Forum * forum, string title, string username, st
 	/* Create a thread and a post inside it */
 	main->LastPostID += 1;
 	main->LastThreadID += 1;
-	(forum->CreateThread(main->LastThreadID, title, username))->CreatePost(main->LastPostID, username, content);
+	(forum->CreateThread(main->LastThreadID, title, UsertoID(username)))->CreatePost(main->LastPostID, UsertoID(username), content);
 }
 
 void ForumManager::CreatePost(Thread * thread, string username, string content) {
 	/* Create a post with given data */
 	main->LastPostID += 1;
-	thread->CreatePost(main->LastPostID, username, content);
+	thread->CreatePost(main->LastPostID, UsertoID(username), content);
 }
 
 // MODERATOR
