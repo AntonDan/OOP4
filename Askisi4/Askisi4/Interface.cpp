@@ -554,7 +554,6 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			}
 			Thread * tempThread = tempForum->GetThreadByID(atoi(tokens[tokens.size()-1].c_str()));
 			Post * temp = nav.GetCurrentThread()->GetPost(id);
-			nav.Back();
 			nav.MovePost(temp, tempThread);
 		}
 		return ThreadMenu(nav, user);

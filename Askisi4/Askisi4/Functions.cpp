@@ -21,6 +21,20 @@ string Trim(string & str) {
 	return new_str;
 }
 
+int myatoi(string & str){
+	int value = 0;
+	for (unsigned int i = 0; i < Trim(str).size(); ++i){
+		if (isdigit(Trim(str)[i])){
+			value *= 10;
+			value += Trim(str)[i] - '0';
+		}
+		else{
+			return value;
+		}
+	}
+	return value;
+}
+
 bool isNumber(const string & str) {
 	/* Can be implemented without iterators, but we like to keep a variety on our
 	* solutions. (Alternative solution would be using the function overload [])

@@ -36,7 +36,7 @@ public:
 		
 	int GetRights() const;
 
-	int User::GetId() const;
+	int GetId() const;
 
 	//DESTRUCTOR
 	~User();

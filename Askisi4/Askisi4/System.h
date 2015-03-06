@@ -31,7 +31,7 @@ private:
 public:
 	Post(int, int , string , Thread *);
 	void SetContent(string );
-	void Post::SetParent(Thread *);
+	void SetParent(Thread *);
 	int GetID() const;
 	int GetUserID() const;
 	string GetContent() const;

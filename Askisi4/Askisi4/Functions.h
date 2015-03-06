@@ -11,6 +11,8 @@ using namespace std;
 
 string Trim(string &);
 
+int myatoi(string &);
+
 bool isNumber(const string &);
 
 vector<string> Split(string, const char);

@@ -73,7 +73,9 @@ int main(int argc, char * argv[] ) {
 		for (i = 1; i < vpath.size() - 1; ++i) {
 			tempForum = tempForum->GetForum(atoi(vpath[i].c_str()));
 		}
-		tempForum->CreateThread(atoi(vpath[vpath.size() - 1].c_str()), name, ID, ((sticky == 'S') + (locked == 'L') * 2));		// Create Thread 
+		tempForum->CreateThread(atoi(vpath[i].c_str()), name, ID, ((sticky == 'S') + (locked == 'L') * 2));		// Create Thread 
+		if (mainSystem.LastThreadID <= atoi(vpath[i].c_str()))
+			mainSystem.LastThreadID = atoi(vpath[i].c_str());
 	}
 #pragma endregion
 
@@ -91,12 +93,15 @@ int main(int argc, char * argv[] ) {
 		/* Navigate to parent thread */
 		Thread * tempThread = tempForum->GetThreadByID(atoi(vpath[i++].c_str()));
 		tempThread->CreatePost(atoi(vpath[i].c_str()), ID, content); // Create post
+		if (mainSystem.LastPostID <= atoi(vpath[i].c_str()))
+			mainSystem.LastPostID = atoi(vpath[i].c_str()) + 1;
 	}
+	
 #pragma endregion
 
 
 	if (argc > 1) {
-		if (argv[1] = "-R") {
+		if (argv[1] == "-R") {
 			if (!RegistrationMenu(fma)) return 0;
 		}
 	} else if (!WelcomeMenu(fma)) return 0;
