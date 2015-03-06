@@ -61,7 +61,7 @@ bool WelcomeMenu(ForumManager & nav) {
 		}
 	} while (currentUser == NULL);
 
-	cout << "Welcome " << currentUser->GetUsername() << "!" << endl;
+	cout << "\nWelcome " << currentUser->GetUsername() << "!" << endl;
 	cout << "You belong in the category: " << ((currentUser->GetRights()>0) ? ((currentUser->GetRights() > 1) ? ((currentUser->GetRights() > 2) ? ("Administrator") : ("Moderator")) : ("User")) : ("Visitor")) << endl; // WARNING: This line looks terrible at sub 23 inch displays
 
 	return MainMenu(nav, currentUser);
@@ -442,7 +442,8 @@ bool ThreadMenu(ForumManager & nav, User * user){
 			cout << "You need to be a user to create a post" << endl;
 		} else {
 			string content;
-			cin >> content;
+			cout << "Enter a Reply: " << endl;
+			getline(cin, content);
 			nav.CreatePost(nav.GetCurrentThread(), user->GetUsername(), content);
 		}
 		return ThreadMenu(nav, user);

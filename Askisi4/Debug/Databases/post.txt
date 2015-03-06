@@ -1,4 +1,7 @@
-1.1.1.2.1 4 TEST
-1.2.3.2 32 OK THIS IS OK
-2.4.3 4 BASDASLDALSDJ
-3.6.4 8 AFI
+1.2.2.2 0 how much money do they make?
+1.1.1 0 how much time do i need?
+1.1.8 0 dunno
+2.3.3 0 ???????
+3.4.4 0 are they usrfull?
+4.5.5 0 cool lang
+4.6.6 0 same as c#

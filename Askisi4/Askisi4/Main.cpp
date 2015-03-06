@@ -119,8 +119,10 @@ int main(int argc, char * argv[] ) {
 	ofstream othreadfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/thread.txt");
 	ofstream opostfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/post.txt");
 	ofstream ouserfile("C:/Users/Antonis/Desktop/OOP4/OOP4/Askisi4/Debug/Databases/user.txt");
-	fma.Save(oforumfile, othreadfile, opostfile, ouserfile);
 	*/
+
+	fma.Save(oforumfile, othreadfile, opostfile, ouserfile);
+	
 
 	/* close output files */
 	oforumfile.close();

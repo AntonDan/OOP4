@@ -1,6 +1,6 @@
-1.1.1.2 N N 2 Another thread
-1.1.1 N N 1 onii-chan
-1.2.3 S L 6 WHATEVA
-2.2.5 N L 35 IMOUTO
-2.4 N N 2 lol
-3.6 S N 2 A last thread
+1.2.2 N N 0 Do they get paid?
+1.1 N N 0 Is it hard to make a program?
+2.3 N N 0 What is a class?
+3.4 N N 0 Do i need inline funcs?
+4.5 N N 0 C#
+4.6 N N 0 Java
